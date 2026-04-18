@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BrightPath Studio | One-Page Starter</title>
+    <meta
+      name="description"
+      content="A clean, responsive one-page website starter with sticky navigation and smooth section scrolling."
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <!-- START: Site Header + Sticky Navigation -->
+    <header class="site-header" id="home">
+      <nav class="top-nav" aria-label="Primary navigation">
+        <div class="container nav-inner">
+          <a href="#home" class="logo" aria-label="BrightPath Studio Home">
+            <img
+              src="https://placehold.co/160x48/2563eb/ffffff?text=LOGO"
+              alt="BrightPath Studio logo placeholder"
+            />
+          </a>
+
+          <button
+            class="nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="primary-menu"
+            aria-label="Open menu"
+          >
+            <span class="hamburger" aria-hidden="true"></span>
+            <span class="visually-hidden">Menu</span>
+          </button>
+
+          <ul class="nav-links" id="primary-menu">
+            <li><a class="nav-link" href="#home">Home</a></li>
+            <li><a class="nav-link" href="#about">About</a></li>
+            <li><a class="nav-link" href="#services">Services</a></li>
+            <li><a class="nav-link" href="#gallery">Gallery</a></li>
+            <li><a class="nav-link" href="#contact">Contact</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- START: Hero -->
+      <section class="hero" aria-labelledby="hero-title">
+        <img
+          class="hero-image"
+          src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80"
+          alt="Mountain landscape at sunrise with winding valley"
+        />
+        <div class="hero-overlay"></div>
+        <div class="hero-content container reveal">
+          <p class="hero-kicker">Welcome to BrightPath Studio</p>
+          <h1 id="hero-title">Build stronger digital experiences with less effort</h1>
+          <p>
+            We help teams launch polished websites and campaigns faster with clear strategy,
+            thoughtful design, and dependable delivery.
+          </p>
+          <a class="btn btn-primary" href="#contact">Start Your Project</a>
+        </div>
+      </section>
+      <!-- END: Hero -->
+    </header>
+    <!-- END: Site Header + Sticky Navigation -->
+
+    <!-- START: Main Content -->
+    <main id="main-content">
+      <section id="about" class="content-section section-light reveal" aria-labelledby="about-title">
+        <div class="container section-grid">
+          <div>
+            <h2 id="about-title">About</h2>
+            <p>
+              BrightPath Studio is a boutique creative partner focused on practical, modern web
+              experiences. We combine strategy and design to simplify complex messages and help
+              organizations stand out online.
+            </p>
+            <p>
+              Our process is intentionally lean, collaborative, and transparent so teams can move
+              quickly without sacrificing quality.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="services"
+        class="content-section section-alt reveal"
+        aria-labelledby="services-title"
+      >
+        <div class="container section-grid">
+          <div>
+            <h2 id="services-title">Services</h2>
+            <p>
+              From landing pages to full campaign support, we provide services that help teams move
+              from concept to launch with confidence.
+            </p>
+            <div class="cards">
+              <article class="card">
+                <h3>Brand Messaging</h3>
+                <p>Shape clear positioning and value propositions that connect with your audience.</p>
+              </article>
+              <article class="card">
+                <h3>Web Design</h3>
+                <p>Create responsive, accessible layouts that look polished on every device.</p>
+              </article>
+              <article class="card">
+                <h3>Launch Support</h3>
+                <p>Coordinate content, QA, and rollout so your team launches with confidence.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="gallery" class="content-section section-light reveal" aria-labelledby="gallery-title">
+        <div class="container">
+          <h2 id="gallery-title">Gallery</h2>
+          <p>
+            A quick look at visual directions and project styles. Replace these placeholders with
+            your own brand or portfolio images.
+          </p>
+          <div class="gallery-grid">
+            <img src="https://placehold.co/600x420/0f172a/e2e8f0?text=Project+1" alt="Gallery placeholder project one" />
+            <img src="https://placehold.co/600x420/1e293b/e2e8f0?text=Project+2" alt="Gallery placeholder project two" />
+            <img src="https://placehold.co/600x420/334155/e2e8f0?text=Project+3" alt="Gallery placeholder project three" />
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="content-section section-alt reveal" aria-labelledby="contact-title">
+        <div class="container section-grid">
+          <div>
+            <h2 id="contact-title">Contact</h2>
+            <p>
+              Ready to get started? Share your goals and timeline, and we’ll follow up with a
+              focused next-step plan.
+            </p>
+            <p><strong>Email:</strong> hello@example.com</p>
+            <p><strong>Phone:</strong> (555) 123-4567</p>
+            <a class="btn btn-secondary" href="mailto:hello@example.com">Email Us</a>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- END: Main Content -->
+
+    <!-- START: Footer -->
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>© <span id="year"></span> BrightPath Studio. All rights reserved.</p>
+        <a href="#home" class="back-to-top">Back to top ↑</a>
+      </div>
+    </footer>
+    <!-- END: Footer -->
+  </body>
+</html>
