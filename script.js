@@ -20,6 +20,20 @@ const daysEl = document.getElementById('days');
 const hoursEl = document.getElementById('hours');
 const minutesEl = document.getElementById('minutes');
 const secondsEl = document.getElementById('seconds');
+const truthFeed = document.getElementById('truth-feed');
+const feedStatus = document.getElementById('feed-status');
+
+// -------------------------------------------------
+// Truth feed settings (single obvious edit location)
+// Paste your JSON feed endpoint URL below.
+// Expected shape:
+// 1) [{ date, content, link? }, ...]
+// or
+// 2) { posts: [{ date, content, link? }, ...] }
+// -------------------------------------------------
+const truthFeedUrl = truthFeed?.dataset.feedUrl || '';
+const truthFeedRefreshMs = 5 * 60 * 1000;
+const truthFeedMaxPosts = 10;
 
 if (navToggle && navMenu) {
   navToggle.addEventListener('click', () => {
@@ -105,6 +119,91 @@ function startCountdown() {
 }
 
 startCountdown();
+
+function formatFeedDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Recent update';
+
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
+}
+
+function normalizePosts(payload) {
+  const rawPosts = Array.isArray(payload) ? payload : payload?.posts || payload?.items || [];
+
+  return rawPosts
+    .map((post) => ({
+      date: post.date || post.publishedAt || post.published_at || post.created_at || post.createdAt,
+      content: post.content || post.text || post.body || post.message,
+      link: post.link || post.url || post.permalink,
+    }))
+    .filter((post) => post.content)
+    .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
+    .slice(0, truthFeedMaxPosts);
+}
+
+function renderPosts(posts) {
+  if (!truthFeed) return;
+
+  if (posts.length === 0) {
+    if (feedStatus) {
+      feedStatus.textContent = 'No feed posts found yet. Showing starter placeholders.';
+    }
+    return;
+  }
+
+  const markup = posts
+    .map(
+      (post) => `
+      <article class="feed-post">
+        <p class="feed-date">${formatFeedDate(post.date)}</p>
+        <p>${post.content}</p>
+        ${post.link ? `<a class="feed-link" href="${post.link}" target="_blank" rel="noopener noreferrer">Read post</a>` : ''}
+      </article>
+    `
+    )
+    .join('');
+
+  truthFeed.innerHTML = markup;
+
+  if (feedStatus) {
+    feedStatus.textContent = `Showing latest ${posts.length} post${posts.length === 1 ? '' : 's'}. Auto-refreshes every 5 minutes.`;
+  }
+}
+
+async function updateTruthFeed() {
+  if (!truthFeed || !truthFeedUrl) {
+    if (feedStatus) {
+      feedStatus.textContent =
+        'Add your feed endpoint to data-feed-url in index.html to auto-populate latest 10 posts.';
+    }
+    return;
+  }
+
+  try {
+    const response = await fetch(truthFeedUrl, { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`Feed request failed (${response.status})`);
+    }
+
+    const payload = await response.json();
+    const posts = normalizePosts(payload);
+    renderPosts(posts);
+  } catch (error) {
+    if (feedStatus) {
+      feedStatus.textContent = 'Feed refresh failed. Keeping existing posts visible.';
+    }
+    console.error(error);
+  }
+}
+
+updateTruthFeed();
+if (truthFeed && truthFeedUrl) {
+  setInterval(updateTruthFeed, truthFeedRefreshMs);
+}
 
 if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
   const revealObserver = new IntersectionObserver(

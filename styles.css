@@ -1,4 +1,5 @@
 :root {
+  /* Core palette (bold, modern, non-political) */
   --color-bg: #0b1020;
   --color-surface: #ffffff;
   --color-surface-alt: #f4f6fb;
@@ -15,12 +16,14 @@
   --color-countdown-text: #f8fafc;
   --color-hero-overlay: rgba(5, 8, 22, 0.62);
 
+  /* Typography */
   --font-family-base: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   --font-size-100: 0.875rem;
   --font-size-200: 1rem;
   --font-size-300: 1.125rem;
   --font-size-400: clamp(1.7rem, 4.5vw, 3.2rem);
 
+  /* Spacing */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -30,6 +33,7 @@
   --space-7: 3rem;
   --space-8: 4rem;
 
+  /* Radius + shadows + layout */
   --radius-sm: 0.4rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
@@ -37,8 +41,13 @@
   --shadow-md: 0 20px 40px rgba(15, 23, 42, 0.14);
   --container-max: 72rem;
   --nav-height: 4.4rem;
+
+  /* Breakpoint references */
+  --bp-tablet: 48rem;
+  --bp-desktop: 64rem;
 }
 
+/* Base reset */
 *,
 *::before,
 *::after {
@@ -94,6 +103,7 @@ img {
   outline-offset: 2px;
 }
 
+/* Utilities */
 .container {
   width: min(100% - 2rem, var(--container-max));
   margin-inline: auto;
@@ -130,6 +140,7 @@ img {
   top: var(--space-3);
 }
 
+/* Sticky nav */
 .top-nav {
   position: sticky;
   top: 0;
@@ -149,11 +160,8 @@ img {
 }
 
 .logo img {
-  max-width: 140px;
-  max-height: 48px;
-  width: auto;
+  width: 9rem;
   height: auto;
-
 }
 
 .nav-links {
@@ -218,6 +226,7 @@ img {
   top: 0.35rem;
 }
 
+/* Countdown bar */
 .countdown-bar {
   background: linear-gradient(90deg, #111827 0%, #1f2937 45%, #111827 100%);
   color: var(--color-countdown-text);
@@ -275,6 +284,7 @@ img {
   color: #86efac;
 }
 
+/* Hero */
 .hero {
   position: relative;
   min-height: clamp(24rem, 73vh, 42rem);
@@ -333,6 +343,7 @@ img {
   gap: var(--space-3);
 }
 
+/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -381,6 +392,7 @@ img {
   background: rgba(255, 255, 255, 0.14);
 }
 
+/* Sections */
 .content-section {
   padding-block: clamp(var(--space-7), 8vw, 5.3rem);
   scroll-margin-top: calc(var(--nav-height) + 4.5rem);
@@ -421,6 +433,13 @@ h2 {
 .card h3 {
   margin-bottom: var(--space-2);
   font-size: 1.15rem;
+}
+
+/* Updates center / Truth Social */
+.feed-note {
+  margin-top: var(--space-4);
+  color: #334155;
+  font-size: var(--font-size-200);
 }
 
 .feed-panel {
@@ -465,6 +484,7 @@ h2 {
   margin-top: var(--space-4);
 }
 
+/* CTA panel */
 .cta-panel {
   background: linear-gradient(160deg, #ffffff 0%, #f5f3ff 100%);
   border: 1px solid #ddd6fe;
@@ -487,6 +507,7 @@ h2 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+/* Footer */
 .site-footer {
   background: var(--color-dark);
   color: #cbd5e1;
@@ -528,6 +549,7 @@ h2 {
   color: #fff;
 }
 
+/* Subtle reveal animation */
 .reveal {
   opacity: 0;
   transform: translateY(10px);
@@ -539,6 +561,7 @@ h2 {
   transform: translateY(0);
 }
 
+/* Responsive rules */
 @media (max-width: 64rem) {
   .contact-grid {
     grid-template-columns: 1fr 1fr;
