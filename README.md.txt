@@ -1,59 +1,129 @@
-# One-Page Website Starter
+# Momentum Landing Page Starter (Campaign-Style, Non-Political)
 
-A clean, responsive one-page marketing site built with semantic HTML, CSS variables, and minimal vanilla JavaScript.
+A bold, action-oriented one-page starter for launches, initiatives, events, movements, or brand messages.
+Built with semantic HTML, CSS custom properties, and lightweight vanilla JavaScript.
 
 ## File structure
 
-- `index.html` – page layout, semantic sections, sticky navigation, hero, content sections, and footer.
-- `styles.css` – design system tokens (CSS variables), reset, responsive layout, and component styles.
-- `script.js` – mobile menu toggle, active section highlighting, reveal-on-scroll, and footer year.
-- `site/README.md` – existing repository file (left unchanged).
+- `index.html` – sticky nav, countdown bar, hero, Why It Matters, Priorities, Updates/Truth Social placeholder, Get Involved, and Footer.
+- `styles.css` – design tokens, reset/base styles, responsive layouts, section rhythm, buttons, feed cards, and footer styles.
+- `script.js` – mobile nav toggle, active section highlighting, countdown logic, reveal-on-scroll (reduced-motion aware), and footer year.
 
-## Where to replace logo, image, and text
+## Replace logo and hero image
 
 In `index.html`:
 
-1. **Logo placeholder**
+1. **Logo**
    - Find the `<a class="logo">` image near the top navigation.
-   - Replace its `src` and `alt` with your real logo asset.
+   - Replace the placeholder image URL and alt text.
 
-2. **Hero image + overlay content**
-   - Find `<section class="hero">`.
-   - Replace `img.hero-image` source URL and alt text.
-   - Update hero kicker, headline, paragraph, and CTA button text/link.
+2. **Hero image**
+   - Find `<img class="hero-image">` inside the hero section.
+   - Replace `src` with your own asset and update alt text.
 
-3. **Section content**
-   - Edit text in `#about`, `#services`, `#gallery`, and `#contact`.
-   - For the gallery, swap placeholder image URLs for real images.
+## Edit countdown target date
 
-## How section anchors work
+In `script.js` near the top:
 
-- Navigation links use same-page IDs (example: `href="#services"`).
-- Matching sections use `id="services"`, etc.
-- Sticky nav is handled with:
-  - CSS: `position: sticky` on `.top-nav`
-  - CSS: `scroll-margin-top` on `.content-section` so anchor jumps do not hide headings behind the nav.
-- Smooth scrolling is enabled on `html { scroll-behavior: smooth; }` and automatically reduced for users who prefer reduced motion.
+```js
+const countdownTargetDate = '2026-07-01T09:00:00';
+const countdownExpiredMessage = 'The next phase has begun.';
+Change countdownTargetDate to your launch/event time.
 
-## How to customize breakpoints, colors, and fonts
+Keep format YYYY-MM-DDTHH:mm:ss.
 
-All key design tokens are in `:root` in `styles.css`:
+Change countdownExpiredMessage for your preferred post-countdown text.
 
-- **Colors**: `--color-*`
-- **Spacing scale**: `--space-*`
-- **Font sizes**: `--font-size-*`
-- **Radius + container**: `--radius-*`, `--container-max`
-- **Breakpoint reference tokens**: `--bp-mobile`, `--bp-tablet`, `--bp-desktop`
+How section anchors work
+Navigation links point to same-page section IDs.
 
-To customize quickly:
+Example: href="#priorities" matches id="priorities".
 
-1. Change brand color by updating `--color-primary` and `--color-primary-dark`.
-2. Change typography by editing `--font-family-base`.
-3. Adjust section density by tuning `--space-*` variables.
-4. Update responsive behavior in media queries near the bottom of `styles.css`.
+Sticky nav stays visible while scrolling.
 
-## Notes
+Each section uses scroll-margin-top so anchor jumps do not hide headings behind the sticky nav.
 
-- JavaScript is intentionally lightweight and easy to remove.
-- Reveal animation can be disabled by removing `.reveal` classes in `index.html` and the related CSS/JS blocks.
-- The template is static and production-friendly as a starter for most simple landing pages.
+Update colors, fonts, spacing
+In styles.css, edit :root variables:
+
+colors (--color-*)
+
+spacing (--space-*)
+
+type scale (--font-size-*)
+
+radius (--radius-*)
+
+shadows (--shadow-*)
+
+max content width (--container-max)
+
+Truth Social placeholder/feed section setup
+The #updates section is intentionally feed-ready but currently static:
+
+Uses styled placeholder update cards (.feed-post).
+
+Does not claim an official full timeline embed.
+
+Can be swapped later without rebuilding the full page.
+
+Perpetual auto-feed (latest 10 posts)
+The page now supports automatic feed population and refresh in script.js.
+
+In index.html, set your endpoint on the feed panel:
+
+<div class="feed-panel" id="truth-feed" data-feed-url="https://your-feed-endpoint.example/posts.json">
+script.js will fetch and render the latest 10 posts on load.
+
+It refreshes automatically every 5 minutes (perpetual polling while page is open).
+
+Expected JSON shape:
+
+[
+  { "date": "2026-04-18T12:00:00Z", "content": "Post text", "link": "https://example.com/post-1" }
+]
+or:
+
+{
+  "posts": [
+    { "date": "2026-04-18T12:00:00Z", "content": "Post text", "link": "https://example.com/post-1" }
+  ]
+}
+Update placeholder feed cards
+In index.html, edit the cards inside .feed-panel:
+
+.feed-date
+
+post text
+
+optional .feed-link
+
+Optional official Truth Social follow button
+A commented block is provided in the Updates section:
+
+<div data-truth-social-follow-button data-username="USERNAME"></div>
+<script async src="https://embed.truthsocial.com/embed.js"></script>
+To enable:
+
+Uncomment the block.
+
+Replace USERNAME with your account.
+
+Future dynamic feed options
+You can later replace placeholder cards using:
+
+Manual CMS-managed updates.
+
+RSS-to-JSON pipeline rendered client-side.
+
+Server-side proxy/custom API integration.
+
+Approved third-party social aggregation tools.
+
+Notes
+This template is intentionally bold and urgent in tone, but generic/non-partisan.
+
+Keep major section comments in index.html so non-developers can edit safely.
+
+All core behavior is plain HTML/CSS/JS to keep maintenance simple.
+
