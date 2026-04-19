@@ -1,129 +1,144 @@
-# Momentum Landing Page Starter (Campaign-Style, Non-Political)
+# DOPE Site
 
-A bold, action-oriented one-page starter for launches, initiatives, events, movements, or brand messages.
-Built with semantic HTML, CSS custom properties, and lightweight vanilla JavaScript.
+A one-page campaign-style website being developed for the DOPE initiative.
+
+This project is currently in active build/refinement. The core structure is in place, key brand assets are live, and selected sections are partially populated, but several areas still use placeholder content while messaging, styling, and integrations are being finalized.
+
+## Current project status
+
+### Live / real assets in place
+- published logo in header
+- published hero/header image
+- site structure and navigation
+- countdown bar
+- hero layout
+- Why It Matters content section
+
+### In progress
+- hero headline/body copy
+- hero CTA copy and destination strategy
+- Why It Matters styling polish
+- feed/XML integration fix
+
+### Still placeholder
+- Priorities section and 4 cards
+- much of the remaining site content
+- contact / call-to-action details
+- footer details as needed
 
 ## File structure
 
-- `index.html` – sticky nav, countdown bar, hero, Why It Matters, Priorities, Updates/Truth Social placeholder, Get Involved, and Footer.
-- `styles.css` – design tokens, reset/base styles, responsive layouts, section rhythm, buttons, feed cards, and footer styles.
-- `script.js` – mobile nav toggle, active section highlighting, countdown logic, reveal-on-scroll (reduced-motion aware), and footer year.
+- `index.html`  
+  Main page structure including header, countdown, hero, Why It Matters, Priorities, feed section, CTA area, and footer.
 
-## Replace logo and hero image
+- `styles.css`  
+  Global styles, layout, color variables, button treatments, card styles, feed panel styles, responsive behavior, and section presentation.
 
-In `index.html`:
+- `script.js`  
+  Handles mobile navigation, active section highlighting, countdown logic, reveal-on-scroll behavior, footer year, and feed loading logic.
 
-1. **Logo**
-   - Find the `<a class="logo">` image near the top navigation.
-   - Replace the placeholder image URL and alt text.
+## Section-by-section status
 
-2. **Hero image**
-   - Find `<img class="hero-image">` inside the hero section.
-   - Replace `src` with your own asset and update alt text.
+### Header / Navigation
+The header and navigation are in place and functioning.  
+The logo is no longer a placeholder asset.
 
-## Edit countdown target date
+### Countdown Bar
+The countdown is active and controlled through `script.js`.
 
-In `script.js` near the top:
+Current settings:
 
-```js
-const countdownTargetDate = '2026-07-01T09:00:00';
-const countdownExpiredMessage = 'The next phase has begun.';
-Change countdownTargetDate to your launch/event time.
+    const countdownTargetDate = '2029-01-22T12:00:00-05:00';
+    const countdownExpiredMessage = 'We are live.';
 
-Keep format YYYY-MM-DDTHH:mm:ss.
+### Hero
+The hero layout is live and using the published image asset.  
+Current messaging is considered working draft content and is still being tightened up.
 
-Change countdownExpiredMessage for your preferred post-countdown text.
+Areas still being refined:
+- headline
+- supporting paragraph copy
+- CTA language
+- CTA strategy / destination
 
-How section anchors work
-Navigation links point to same-page section IDs.
+### Why It Matters
+This section contains actual site messaging and is not placeholder copy.
 
-Example: href="#priorities" matches id="priorities".
+Current focus here is visual/styling refinement, including:
+- hierarchy
+- spacing
+- emphasis treatment
+- overall polish
 
-Sticky nav stays visible while scrolling.
+### Priorities
+The Priorities section is currently placeholder content.
 
-Each section uses scroll-margin-top so anchor jumps do not hide headings behind the sticky nav.
+The existing 4-card layout is structural only and should be treated as temporary until final content is written.
 
-Update colors, fonts, spacing
-In styles.css, edit :root variables:
+### Feed / Updates
+The feed section is intended to use an XML source URL, but it is not currently working as expected.
 
-colors (--color-*)
+Current status:
+- structure is in place
+- URL is assigned
+- JavaScript attempts to support XML/RSS feed loading
+- feed output is not yet functioning properly in the current implementation
 
-spacing (--space-*)
+This should be treated as an active integration issue, not a completed feature.
 
-type scale (--font-size-*)
+### CTA / Get Involved
+This section is still placeholder and will need final content, actions, and contact details once the site direction is further locked in.
 
-radius (--radius-*)
+### Footer
+Footer structure is present, but supporting content may still need final updates depending on launch needs.
 
-shadows (--shadow-*)
+## Brand and messaging notes
 
-max content width (--container-max)
+The site is being built around the DOPE framework:
 
-Truth Social placeholder/feed section setup
-The #updates section is intentionally feed-ready but currently static:
+- Dare
+- Overcome
+- Persist
+- Elevate
 
-Uses styled placeholder update cards (.feed-post).
+This language is currently most visible in:
+- hero messaging
+- Why It Matters section
 
-Does not claim an official full timeline embed.
+Messaging is still being tuned for tone, clarity, and strength.
 
-Can be swapped later without rebuilding the full page.
+## Known issues / open items
 
-Perpetual auto-feed (latest 10 posts)
-The page now supports automatic feed population and refresh in script.js.
+- hero copy needs refinement
+- hero CTA needs refinement
+- Why It Matters styling needs polish
+- Priorities content is placeholder
+- XML feed is not currently working
+- remaining site sections still need content replacement
+- README should continue to be updated as the site moves from structure to finalized content
 
-In index.html, set your endpoint on the feed panel:
+## Local development
 
-<div class="feed-panel" id="truth-feed" data-feed-url="https://your-feed-endpoint.example/posts.json">
-script.js will fetch and render the latest 10 posts on load.
+This is a static HTML / CSS / JavaScript project.
 
-It refreshes automatically every 5 minutes (perpetual polling while page is open).
+To run locally with a lightweight server:
 
-Expected JSON shape:
+    python -m http.server 8000
 
-[
-  { "date": "2026-04-18T12:00:00Z", "content": "Post text", "link": "https://example.com/post-1" }
-]
-or:
+Then open:
 
-{
-  "posts": [
-    { "date": "2026-04-18T12:00:00Z", "content": "Post text", "link": "https://example.com/post-1" }
-  ]
-}
-Update placeholder feed cards
-In index.html, edit the cards inside .feed-panel:
+    http://localhost:8000
 
-.feed-date
+## Recommended next steps
 
-post text
+1. finalize hero message direction
+2. tighten hero CTA copy and link behavior
+3. polish Why It Matters styling
+4. replace Priorities placeholder content
+5. debug and fix XML feed integration
+6. replace remaining placeholder sections
+7. update README again once content status changes
 
-optional .feed-link
+## Notes
 
-Optional official Truth Social follow button
-A commented block is provided in the Updates section:
-
-<div data-truth-social-follow-button data-username="USERNAME"></div>
-<script async src="https://embed.truthsocial.com/embed.js"></script>
-To enable:
-
-Uncomment the block.
-
-Replace USERNAME with your account.
-
-Future dynamic feed options
-You can later replace placeholder cards using:
-
-Manual CMS-managed updates.
-
-RSS-to-JSON pipeline rendered client-side.
-
-Server-side proxy/custom API integration.
-
-Approved third-party social aggregation tools.
-
-Notes
-This template is intentionally bold and urgent in tone, but generic/non-partisan.
-
-Keep major section comments in index.html so non-developers can edit safely.
-
-All core behavior is plain HTML/CSS/JS to keep maintenance simple.
-
+This README reflects the site as a work in progress, not a finished launch-ready build.
