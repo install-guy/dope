@@ -123,6 +123,16 @@ function formatFeedDate(value) {
   }).format(date);
 }
 
+function truncateText(value, maxLength = 200) {
+  const text = String(value || '').trim();
+
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  return `${text.slice(0, maxLength).trimEnd()}…`;
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -215,7 +225,7 @@ function renderPosts(posts) {
   const markup = posts
     .map((post) => {
       const safeDate = escapeHtml(formatFeedDate(post.date));
-      const safeContent = escapeHtml(post.content);
+      const safeContent = escapeHtml(truncateText(post.content, 250));
       const safeLink = post.link ? escapeHtml(post.link) : '';
 
       return `
