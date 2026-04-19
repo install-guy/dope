@@ -133,7 +133,9 @@ function escapeHtml(value) {
 }
 
 function normalizeJsonPosts(payload) {
-  const rawPosts = Array.isArray(payload) ? payload : payload?.posts || payload?.items || [];
+  const rawPosts = Array.isArray(payload)
+    ? payload
+    : payload?.posts || payload?.items || [];
 
   return rawPosts
     .map((post) => ({
@@ -242,26 +244,23 @@ async function updateTruthFeed() {
   }
 
   try {
+    if (feedStatus) {
+      feedStatus.textContent = 'Loading latest updates…';
+    }
+
     const response = await fetch(truthFeedUrl, { cache: 'no-store' });
+
     if (!response.ok) {
       throw new Error(`Feed request failed (${response.status})`);
     }
 
-    const contentType = response.headers.get('content-type') || '';
-    let posts = [];
-
-    if (contentType.includes('json')) {
-      const payload = await response.json();
-      posts = normalizeJsonPosts(payload);
-    } else {
-      const xmlText = await response.text();
-      posts = normalizeXmlPosts(xmlText);
-    }
+    const payload = await response.json();
+    const posts = normalizeJsonPosts(payload);
 
     renderPosts(posts);
   } catch (error) {
     if (feedStatus) {
-      feedStatus.textContent = 'Feed refresh failed. This may be a browser access/CORS issue. Keeping existing feed content visible.';
+      feedStatus.textContent = 'Feed refresh failed. Keeping existing feed content visible.';
     }
     console.error(error);
   }
