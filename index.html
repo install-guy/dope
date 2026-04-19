@@ -159,51 +159,28 @@
       </section>
       <!-- END: Priorities -->
 
-      <!-- START: Updates / Truth Social (placeholder feed) -->
+      <!-- START: Updates / Truth Social -->
       <section id="updates" class="content-section section-light reveal" aria-labelledby="updates-title">
         <div class="container section-stack">
           <h2 id="updates-title">Updates Center: Follow Along on Truth Social</h2>
           <p>
-            This section is intentionally built as a modular updates hub. It currently uses
-            placeholder cards and does <strong>not</strong> claim to be an official live timeline
-            embed.
+            This section is intentionally built as a modular updates hub. It can now read an XML/RSS
+            feed and display the latest posts when the feed is reachable from the browser.
           </p>
 
           <p class="feed-note" id="feed-status" aria-live="polite">
-            Feed auto-refresh is enabled. Latest 10 posts will appear here when a feed URL is set.
+            Feed auto-refresh is enabled. Latest 10 posts will appear here when the feed is reachable.
           </p>
 
           <div
             class="feed-panel"
             id="truth-feed"
-            data-feed-url=""
-            aria-label="Truth Social updates placeholder feed"
+            data-feed-url="https://trumpstruth.org/feed"
+            aria-label="Truth Social updates feed"
           >
             <article class="feed-post">
-              <p class="feed-date">April 16, 2026</p>
-              <p>
-                We published the phase-one roadmap and opened the first window for community
-                feedback. Early responses are helping shape the rollout.
-              </p>
-              <a class="feed-link" href="#get-involved">See next steps</a>
-            </article>
-
-            <article class="feed-post">
-              <p class="feed-date">April 11, 2026</p>
-              <p>
-                New briefing posted: what this initiative aims to solve now, what will happen in the
-                next 30 days, and how success will be measured.
-              </p>
-              <a class="feed-link" href="#why-it-matters">Read why it matters</a>
-            </article>
-
-            <article class="feed-post">
-              <p class="feed-date">April 7, 2026</p>
-              <p>
-                Our core team completed launch readiness checks and confirmed the timeline for public
-                activation.
-              </p>
-              <a class="feed-link" href="#priorities">View priorities</a>
+              <p class="feed-date">Feed loading…</p>
+              <p>Latest posts will appear here automatically.</p>
             </article>
           </div>
 
@@ -215,14 +192,6 @@
               <div data-truth-social-follow-button data-username="USERNAME"></div>
             </div>
             <script async src="https://embed.truthsocial.com/embed.js"></script>
-          -->
-
-          <!--
-            FUTURE FEED INTEGRATION OPTIONS:
-            1) Manual/CMS-driven cards replacing .feed-post blocks.
-            2) RSS-to-JSON transform rendered via script.js.
-            3) Server-side proxy/custom API that fetches and sanitizes content.
-            4) Third-party aggregation provider if policy requirements are met.
           -->
         </div>
       </section>

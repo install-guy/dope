@@ -5,14 +5,10 @@ const sections = document.querySelectorAll('main section[id]');
 const revealElements = document.querySelectorAll('.reveal');
 
 // -------------------------------------------------
-// Countdown settings (single obvious edit location)
-// Update this date/time for your launch or event.
-// Format example: YYYY-MM-DDTHH:mm:ss (local time)
+// Countdown settings
 // -------------------------------------------------
-const countdownTargetDate = '2026-07-01T09:00:00';
-
-// Message shown once countdown reaches zero.
-const countdownExpiredMessage = 'The next phase has begun.';
+const countdownTargetDate = '2029-01-22T12:00:00-05:00';
+const countdownExpiredMessage = 'We are live.';
 
 const countdownContainer = document.getElementById('countdown');
 const countdownExpired = document.getElementById('countdown-expired');
@@ -24,12 +20,8 @@ const truthFeed = document.getElementById('truth-feed');
 const feedStatus = document.getElementById('feed-status');
 
 // -------------------------------------------------
-// Truth feed settings (single obvious edit location)
-// Paste your JSON feed endpoint URL below.
-// Expected shape:
-// 1) [{ date, content, link? }, ...]
-// or
-// 2) { posts: [{ date, content, link? }, ...] }
+// Truth feed settings
+// Supports JSON or XML/RSS
 // -------------------------------------------------
 const truthFeedUrl = truthFeed?.dataset.feedUrl || '';
 const truthFeedRefreshMs = 5 * 60 * 1000;
@@ -131,7 +123,16 @@ function formatFeedDate(value) {
   }).format(date);
 }
 
-function normalizePosts(payload) {
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function normalizeJsonPosts(payload) {
   const rawPosts = Array.isArray(payload) ? payload : payload?.posts || payload?.items || [];
 
   return rawPosts
@@ -145,26 +146,84 @@ function normalizePosts(payload) {
     .slice(0, truthFeedMaxPosts);
 }
 
+function normalizeXmlPosts(xmlText) {
+  const parser = new DOMParser();
+  const xml = parser.parseFromString(xmlText, 'application/xml');
+
+  const parseError = xml.querySelector('parsererror');
+  if (parseError) {
+    throw new Error('Unable to parse XML feed.');
+  }
+
+  const items = Array.from(xml.querySelectorAll('item, entry'));
+
+  return items
+    .map((item) => {
+      const title =
+        item.querySelector('title')?.textContent?.trim() || '';
+
+      const description =
+        item.querySelector('description')?.textContent?.trim() ||
+        item.querySelector('content')?.textContent?.trim() ||
+        item.querySelector('content\\:encoded')?.textContent?.trim() ||
+        item.querySelector('summary')?.textContent?.trim() ||
+        '';
+
+      const linkNode = item.querySelector('link');
+      const link =
+        linkNode?.getAttribute('href') ||
+        linkNode?.textContent?.trim() ||
+        '';
+
+      const date =
+        item.querySelector('pubDate')?.textContent?.trim() ||
+        item.querySelector('published')?.textContent?.trim() ||
+        item.querySelector('updated')?.textContent?.trim() ||
+        '';
+
+      const content = description || title;
+
+      return {
+        date,
+        content,
+        link,
+      };
+    })
+    .filter((post) => post.content)
+    .slice(0, truthFeedMaxPosts);
+}
+
 function renderPosts(posts) {
   if (!truthFeed) return;
 
   if (posts.length === 0) {
+    truthFeed.innerHTML = `
+      <article class="feed-post">
+        <p class="feed-date">No updates yet</p>
+        <p>No feed posts were found. Keeping the feed area ready for future updates.</p>
+      </article>
+    `;
+
     if (feedStatus) {
-      feedStatus.textContent = 'No feed posts found yet. Showing starter placeholders.';
+      feedStatus.textContent = 'No feed posts found.';
     }
     return;
   }
 
   const markup = posts
-    .map(
-      (post) => `
-      <article class="feed-post">
-        <p class="feed-date">${formatFeedDate(post.date)}</p>
-        <p>${post.content}</p>
-        ${post.link ? `<a class="feed-link" href="${post.link}" target="_blank" rel="noopener noreferrer">Read post</a>` : ''}
-      </article>
-    `
-    )
+    .map((post) => {
+      const safeDate = escapeHtml(formatFeedDate(post.date));
+      const safeContent = escapeHtml(post.content);
+      const safeLink = post.link ? escapeHtml(post.link) : '';
+
+      return `
+        <article class="feed-post">
+          <p class="feed-date">${safeDate}</p>
+          <p>${safeContent}</p>
+          ${safeLink ? `<a class="feed-link" href="${safeLink}" target="_blank" rel="noopener noreferrer">Read post</a>` : ''}
+        </article>
+      `;
+    })
     .join('');
 
   truthFeed.innerHTML = markup;
@@ -177,8 +236,7 @@ function renderPosts(posts) {
 async function updateTruthFeed() {
   if (!truthFeed || !truthFeedUrl) {
     if (feedStatus) {
-      feedStatus.textContent =
-        'Add your feed endpoint to data-feed-url in index.html to auto-populate latest 10 posts.';
+      feedStatus.textContent = 'Add your feed endpoint to data-feed-url in index.html to auto-populate latest posts.';
     }
     return;
   }
@@ -189,12 +247,21 @@ async function updateTruthFeed() {
       throw new Error(`Feed request failed (${response.status})`);
     }
 
-    const payload = await response.json();
-    const posts = normalizePosts(payload);
+    const contentType = response.headers.get('content-type') || '';
+    let posts = [];
+
+    if (contentType.includes('json')) {
+      const payload = await response.json();
+      posts = normalizeJsonPosts(payload);
+    } else {
+      const xmlText = await response.text();
+      posts = normalizeXmlPosts(xmlText);
+    }
+
     renderPosts(posts);
   } catch (error) {
     if (feedStatus) {
-      feedStatus.textContent = 'Feed refresh failed. Keeping existing posts visible.';
+      feedStatus.textContent = 'Feed refresh failed. This may be a browser access/CORS issue. Keeping existing feed content visible.';
     }
     console.error(error);
   }
