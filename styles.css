@@ -488,6 +488,12 @@ h2 {
   border: 1px solid #d8e2f3;
   border-radius: var(--radius-md);
   padding: var(--space-4);
+  min-width: 0;
+}
+
+.feed-post p {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .feed-date {
@@ -641,5 +647,15 @@ h2 {
 
   .hero p {
     font-size: var(--font-size-200);
+  }
+}
+
+@media (max-width: 30rem) {
+  .feed-panel {
+    padding: var(--space-4);
+  }
+
+  .feed-post {
+    padding: var(--space-3);
   }
 }
