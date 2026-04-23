@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DOPE | Dare. Overcome. Persist. Elevate.</title>
+    <meta
+      name="description"
+      content="Honestly, what a dope!."
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header" id="home">
+      <nav class="top-nav" aria-label="Primary navigation">
+        <div class="container nav-inner">
+          <a class="logo" href="#home" aria-label="Dope home">
+            <img src="assets/images/logo_dope.png" alt="Dope logo" />
+          </a>
+
+          <button
+            class="nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="primary-menu"
+            aria-label="Open menu"
+          >
+            <span class="hamburger" aria-hidden="true"></span>
+            <span class="visually-hidden">Menu</span>
+          </button>
+
+          <ul class="nav-links" id="primary-menu">
+            <li><a class="nav-link" href="#home">Home</a></li>
+            <li><a class="nav-link" href="#why-it-matters">Why It Matters</a></li>
+            <li><a class="nav-link" href="#priorities">Priorities</a></li>
+            <li><a class="nav-link" href="#updates">Truth Social</a></li>
+            <li><a class="nav-link" href="#get-involved">Get Involved</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <section class="countdown-bar" aria-label="Initiative countdown">
+      <div class="container countdown-inner">
+        <p class="countdown-label">The National Nightmare Ends...</p>
+
+        <div class="countdown" id="countdown" role="timer" aria-live="polite">
+          <div class="countdown-item"><span id="days">00</span><small>Days</small></div>
+          <div class="countdown-item"><span id="hours">00</span><small>Hours</small></div>
+          <div class="countdown-item"><span id="minutes">00</span><small>Minutes</small></div>
+          <div class="countdown-item"><span id="seconds">00</span><small>Seconds</small></div>
+        </div>
+
+        <p class="countdown-expired" id="countdown-expired" hidden>We are live.</p>
+      </div>
+    </section>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <img
+        class="hero-image"
+        src="assets/images/header image.png"
+        alt="Dope header image"
+        loading="eager"
+      />
+      <div class="hero-overlay" aria-hidden="true"></div>
+
+     <div class="container hero-content reveal">
+  <p class="hero-kicker">honestly</p>
+  <h1 id="hero-title">A cleaner read on the chaos.</h1>
+  <p>
+    A rough-cut home for what matters, what is absurd, and what deserves a closer look.
+  </p>
+
+  <!--
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="#why-it-matters">Why It Matters</a>
+    <a class="btn btn-ghost" href="#updates">Does it Matter</a>
+  </div>
+  -->
+</div>
+    </section>
+
+    <main id="main-content">
+    <section
+  id="why-it-matters"
+  class="content-section section-light reveal"
+  aria-labelledby="why-title"
+>
+  <div class="container section-stack">
+    <h2 id="why-title">What is this?</h2>
+
+    <p class="section-lead">
+      A running read on the mess, the momentum, and the moments worth a closer look.
+    </p>
+
+    <p>
+      Not everything loud matters. This is a place to call out the absurd, track what matters, and make better sense of the bigger picture.
+    </p>
+
+    <p class="section-tagline">
+      A little perspective. A little attitude.
+    </p>
+  </div>
+</section>
+
+      <section id="priorities" class="content-section section-alt reveal" aria-labelledby="priorities-title">
+        <div class="container section-stack">
+          <h2 id="priorities-title">What to Watch</h2>
+          <p>
+            Four ways to read the moment: what matters, what is ridiculous, what is shaping the mood,
+            and what is getting missed while everyone stares at the loudest thing in the room.
+          </p>
+
+          <div class="cards-grid">
+            <article class="card">
+              <h3>What Actually Matters</h3>
+              <p><em>What the hell matters, once you scrape away the circus.</em></p>
+              <p>
+                The developments with real weight behind them. Bigger stakes, broader context, and the
+                part of the story that still matters after the performance wears off.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>You Can’t Make This Up</h3>
+              <p><em>Public stupidity, institutional nonsense, and other preventable events.</em></p>
+              <p>
+                A running file of contradictions, absurd moments, and the kind of behavior that would
+                feel too on-the-nose for satire if it were not happening in public.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>The Vibe Check</h3>
+              <p><em>What people are obsessed with, outraged by, and pretending not to care about.</em></p>
+              <p>
+                The tone of the moment. Culture, mood, reactions, and the strange energy shaping how
+                people talk, posture, spiral, and move.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>Buried Lead</h3>
+              <p><em>The important stuff that got shoved aside by louder idiots.</em></p>
+              <p>
+                The quieter developments with bigger implications. Easy to miss in the churn, but often
+                more revealing than the spectacle getting all the oxygen.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="updates" class="content-section section-light reveal" aria-labelledby="updates-title">
+        <div class="container section-stack">
+          <h2 id="updates-title">See the Signals. Ignore the Noise</h2>
+          <p>
+            Fast-moving events mean very little without context. Staying informed makes it easier to understand what matters, what is theater, and what the latest outburst is really trying to do.
+          </p>
+
+         
+
+          <div
+            class="feed-panel"
+            id="truth-feed"
+            data-feed-url="/api/feed"
+            aria-label="Truth Social updates feed"
+          >
+            <article class="feed-post">
+              <p class="feed-date">Feed loading…</p>
+              <p>Latest posts will appear here automatically.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="get-involved"
+        class="content-section section-alt reveal"
+        aria-labelledby="involved-title"
+      >
+        <div class="container section-stack cta-panel">
+          <h2 id="involved-title">Get Involved / Stay Connected</h2>
+          <p>
+            If this mission resonates with you, now is the moment to engage. Join updates, share the
+            message, and be part of what happens next.
+          </p>
+
+          <div class="cta-actions">
+            <a class="btn btn-primary">Join the List</a>
+            <a class="btn btn-secondary" >Track Live Updates</a>
+          </div>
+
+          <div class="contact-grid" aria-label="Contact information">
+         
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <p>© <span id="year"></span> DOPE. All rights reserved.</p>
+                  </div>
+
+       
+      </div>
+    </footer>
+  </body>
+</html>
