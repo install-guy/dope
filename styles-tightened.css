@@ -649,37 +649,13 @@ h2 {
   }
 
   .countdown-inner {
-    min-height: auto;
     flex-direction: column;
-    align-items: stretch;
-    gap: 0.45rem;
-    padding-block: 0.5rem;
-  }
-
-  .countdown-label {
-    font-size: clamp(0.78rem, 3.1vw, 0.95rem);
-    line-height: 1.1;
+    align-items: flex-start;
   }
 
   .countdown {
     width: 100%;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.35rem;
-  }
-
-  .countdown-item {
-    padding: 0.38rem 0.25rem;
-    border-radius: 0.55rem;
-  }
-
-  .countdown-item span {
-    font-size: clamp(0.82rem, 3.4vw, 1rem);
-    line-height: 1.05;
-  }
-
-  .countdown-item small {
-    font-size: clamp(0.48rem, 2.2vw, 0.62rem);
-    letter-spacing: 0.035em;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .countdown-expired {
@@ -692,8 +668,8 @@ h2 {
   }
 
   .hero {
-  min-height: 27rem;
-  align-items: center;
+    min-height: clamp(20rem, 52vh, 28rem);
+    align-items: center;
   }
 
   .hero-overlay {
@@ -703,26 +679,24 @@ h2 {
   }
 
   .hero-content {
-  max-width: 28rem;
-  padding-top: 0;
-  padding-bottom: 2.25rem;
+    max-width: 22rem;
+    padding-block: clamp(1.35rem, 5vw, 2.4rem);
   }
 
   .hero p {
-    margin-top: 0.82rem;
-    font-size: 1rem;
-    max-width: 22rem;
-    line-height: 1.42;
+    margin-top: 0.8rem;
+    font-size: clamp(0.9rem, 3.4vw, 1rem);
+    max-width: 18rem;
   }
 
   .hero-kicker {
-  font-size: clamp(0.95rem, 3vw, 1.08rem);
-    margin-bottom: 0.46rem;
+    font-size: clamp(0.72rem, 2.5vw, 0.86rem);
+    margin-bottom: 0.42rem;
   }
 
   .hero h1 {
-  font-size: clamp(2.25rem, 7.4vw, 3rem);
-  line-height: 0.98;
+    font-size: clamp(1.72rem, 6vw, 2.25rem);
+    line-height: 0.95;
   }
 
   .hero-title-line {
@@ -740,53 +714,25 @@ h2 {
 
 @media (max-width: 30rem) {
   .hero {
-    min-height: 27rem;
+    min-height: 19rem;
   }
 
   .hero-content {
-    max-width: 26rem;
-    padding-top: 0;
-    padding-bottom: 2.25rem;
+    max-width: 17.5rem;
+    padding-block: 1.25rem;
   }
 
   .hero h1 {
-    font-size: clamp(2rem, 8.4vw, 2.5rem);
-    line-height: 0.98;
+    font-size: clamp(1.42rem, 7vw, 1.78rem);
   }
 
   .hero p {
-    font-size: 1rem;
-    max-width: 22rem;
-    line-height: 1.42;
-  }
-
-  .hero-kicker {
-    font-size: clamp(0.92rem, 3vw, 1rem);
+    font-size: 0.86rem;
+    max-width: 15rem;
   }
 
   .hero-image {
     object-position: 64% center;
-  }
-
-  .countdown-inner {
-    gap: 0.32rem;
-    padding-block: 0.42rem;
-  }
-
-  .countdown {
-    gap: 0.25rem;
-  }
-
-  .countdown-item {
-    padding: 0.32rem 0.15rem;
-  }
-
-  .countdown-item span {
-    font-size: 0.82rem;
-  }
-
-  .countdown-item small {
-    font-size: 0.46rem;
   }
 
   .feed-panel {

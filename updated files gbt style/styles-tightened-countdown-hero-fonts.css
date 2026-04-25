@@ -692,8 +692,8 @@ h2 {
   }
 
   .hero {
-  min-height: 27rem;
-  align-items: center;
+    min-height: clamp(20rem, 52vh, 28rem);
+    align-items: center;
   }
 
   .hero-overlay {
@@ -703,26 +703,25 @@ h2 {
   }
 
   .hero-content {
-  max-width: 28rem;
-  padding-top: 0;
-  padding-bottom: 2.25rem;
+    max-width: 25rem;
+    padding-block: clamp(1.3rem, 4.6vw, 2.25rem);
   }
 
   .hero p {
     margin-top: 0.82rem;
-    font-size: 1rem;
-    max-width: 22rem;
+    font-size: clamp(1rem, 3.8vw, 1.16rem);
+    max-width: 21rem;
     line-height: 1.42;
   }
 
   .hero-kicker {
-  font-size: clamp(0.95rem, 3vw, 1.08rem);
+    font-size: clamp(0.86rem, 2.9vw, 1rem);
     margin-bottom: 0.46rem;
   }
 
   .hero h1 {
-  font-size: clamp(2.25rem, 7.4vw, 3rem);
-  line-height: 0.98;
+    font-size: clamp(2.02rem, 7vw, 2.72rem);
+    line-height: 0.94;
   }
 
   .hero-title-line {
@@ -740,28 +739,26 @@ h2 {
 
 @media (max-width: 30rem) {
   .hero {
-    min-height: 27rem;
+    min-height: 19rem;
   }
 
   .hero-content {
-    max-width: 26rem;
-    padding-top: 0;
-    padding-bottom: 2.25rem;
+    max-width: 20.5rem;
+    padding-block: 1.18rem;
   }
 
   .hero h1 {
-    font-size: clamp(2rem, 8.4vw, 2.5rem);
-    line-height: 0.98;
+    font-size: clamp(1.82rem, 8.8vw, 2.18rem);
   }
 
   .hero p {
-    font-size: 1rem;
-    max-width: 22rem;
-    line-height: 1.42;
+    font-size: 0.98rem;
+    max-width: 18rem;
+    line-height: 1.38;
   }
 
   .hero-kicker {
-    font-size: clamp(0.92rem, 3vw, 1rem);
+    font-size: 0.86rem;
   }
 
   .hero-image {
