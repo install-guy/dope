@@ -797,3 +797,41 @@ h2 {
     padding: var(--space-3);
   }
 }
+
+@media (max-width: 48rem) {
+  .hero-content {
+    max-width: 25rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.35rem, 7vw, 2.8rem);
+    line-height: 1.02;
+  }
+
+  .hero-title-line {
+    white-space: normal;
+  }
+
+  .content-section {
+    padding-block: clamp(2.5rem, 8vw, 3.5rem);
+  }
+}
+
+@media (max-width: 30rem) {
+  .hero-content {
+    max-width: 23rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.1rem, 8vw, 2.45rem);
+    line-height: 1.03;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .content-section {
+    padding-block: 2.5rem;
+  }
+}
