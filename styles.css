@@ -835,3 +835,25 @@ h2 {
     padding-block: 2.5rem;
   }
 }
+
+@media (max-width: 48rem) {
+  .logo img {
+    max-width: 120px;
+    max-height: 48px;
+  }
+
+  .nav-inner {
+    min-height: 4.5rem;
+  }
+}
+
+@media (max-width: 30rem) {
+  .logo img {
+    max-width: 105px;
+    max-height: 42px;
+  }
+
+  .nav-inner {
+    min-height: 4.25rem;
+  }
+}
