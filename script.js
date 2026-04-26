@@ -309,7 +309,7 @@ async function loadWtfjhtFeed() {
   }
 
   try {
-    const response = await fetch("/api/wtfjht");
+    const response = await fetch("/api/wtfjht", { cache: "no-store" });
 
     if (!response.ok) {
       throw new Error("Unable to load WTFJHT feed");
