@@ -58,7 +58,7 @@ export async function onRequestGet() {
     if (APPROVED_URLS.length > 0) {
       items = items.filter((item) => APPROVED_URLS.includes(item.url));
     } else {
-      items = items.slice(0, 5);
+      items = items.slice(0, 10);
     }
 
     const cleanedItems = items.map((item) => ({
