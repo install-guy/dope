@@ -8,7 +8,7 @@ const FEED_URL = "https://whatthefuckjusthappenedtoday.com/feed.json";
     "https://whatthefuckjusthappenedtoday.com/2026/04/26/day-0000/"
   ];
 
-  If this list is empty, the function will show the latest 5 items for testing.
+  If this list is empty, the function will show the latest 10 items for testing.
 */
 const APPROVED_URLS = [];
 
