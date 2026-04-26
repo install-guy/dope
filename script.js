@@ -21,11 +21,11 @@ const feedStatus = document.getElementById('feed-status');
 
 // -------------------------------------------------
 // Truth feed settings
-// Supports JSON or XML/RSS
 // -------------------------------------------------
 const truthFeedUrl = truthFeed?.dataset.feedUrl || '';
 const truthFeedRefreshMs = 5 * 60 * 1000;
 const truthFeedMaxPosts = 10;
+const feedInitialVisibleCount = 5;
 
 if (navToggle && navMenu) {
   navToggle.addEventListener('click', () => {
@@ -158,51 +158,51 @@ function normalizeJsonPosts(payload) {
     .slice(0, truthFeedMaxPosts);
 }
 
-function normalizeXmlPosts(xmlText) {
-  const parser = new DOMParser();
-  const xml = parser.parseFromString(xmlText, 'application/xml');
+function addFeedToggle(feedPanel, allItems, renderCallback, label = 'posts') {
+  if (!feedPanel || allItems.length <= feedInitialVisibleCount) return;
 
-  const parseError = xml.querySelector('parsererror');
-  if (parseError) {
-    throw new Error('Unable to parse XML feed.');
+  const button = document.createElement('button');
+  button.className = 'feed-toggle';
+  button.type = 'button';
+
+  let expanded = false;
+
+  function updateButtonText() {
+    button.textContent = expanded ? `Show fewer ${label}` : `Show more ${label}`;
   }
 
-  const items = Array.from(xml.querySelectorAll('item, entry'));
+  button.addEventListener('click', () => {
+    expanded = !expanded;
 
-  return items
-    .map((item) => {
-      const title =
-        item.querySelector('title')?.textContent?.trim() || '';
+    const visibleItems = expanded
+      ? allItems
+      : allItems.slice(0, feedInitialVisibleCount);
 
-      const description =
-        item.querySelector('description')?.textContent?.trim() ||
-        item.querySelector('content')?.textContent?.trim() ||
-        item.querySelector('content\\:encoded')?.textContent?.trim() ||
-        item.querySelector('summary')?.textContent?.trim() ||
-        '';
+    feedPanel.innerHTML = renderCallback(visibleItems);
+    updateButtonText();
+    feedPanel.appendChild(button);
+  });
 
-      const linkNode = item.querySelector('link');
-      const link =
-        linkNode?.getAttribute('href') ||
-        linkNode?.textContent?.trim() ||
-        '';
+  updateButtonText();
+  feedPanel.appendChild(button);
+}
 
-      const date =
-        item.querySelector('pubDate')?.textContent?.trim() ||
-        item.querySelector('published')?.textContent?.trim() ||
-        item.querySelector('updated')?.textContent?.trim() ||
-        '';
+function getTruthFeedMarkup(posts) {
+  return posts
+    .map((post) => {
+      const safeDate = escapeHtml(formatFeedDate(post.date));
+      const safeContent = escapeHtml(truncateText(post.content, 250));
+      const safeLink = post.link ? escapeHtml(post.link) : '';
 
-      const content = description || title;
-
-      return {
-        date,
-        content,
-        link,
-      };
+      return `
+        <article class="feed-post">
+          <p class="feed-date">${safeDate}</p>
+          <p>${safeContent}</p>
+          ${safeLink ? `<a class="feed-link" href="${safeLink}" target="_blank" rel="noopener noreferrer">Read post</a>` : ''}
+        </article>
+      `;
     })
-    .filter((post) => post.content)
-    .slice(0, truthFeedMaxPosts);
+    .join('');
 }
 
 function renderPosts(posts) {
@@ -222,26 +222,14 @@ function renderPosts(posts) {
     return;
   }
 
-  const markup = posts
-    .map((post) => {
-      const safeDate = escapeHtml(formatFeedDate(post.date));
-      const safeContent = escapeHtml(truncateText(post.content, 250));
-      const safeLink = post.link ? escapeHtml(post.link) : '';
+  const visiblePosts = posts.slice(0, feedInitialVisibleCount);
 
-      return `
-        <article class="feed-post">
-          <p class="feed-date">${safeDate}</p>
-          <p>${safeContent}</p>
-          ${safeLink ? `<a class="feed-link" href="${safeLink}" target="_blank" rel="noopener noreferrer">Read post</a>` : ''}
-        </article>
-      `;
-    })
-    .join('');
-
-  truthFeed.innerHTML = markup;
+  truthFeed.innerHTML = getTruthFeedMarkup(visiblePosts);
+  addFeedToggle(truthFeed, posts, getTruthFeedMarkup, 'posts');
 
   if (feedStatus) {
-    feedStatus.textContent = `Showing latest ${posts.length} post${posts.length === 1 ? '' : 's'}. Auto-refreshes every 5 minutes.`;
+    const visibleCount = Math.min(posts.length, feedInitialVisibleCount);
+    feedStatus.textContent = `Showing latest ${visibleCount} of ${posts.length} post${posts.length === 1 ? '' : 's'}.`;
   }
 }
 
@@ -301,18 +289,45 @@ if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
 const year = document.getElementById('year');
 if (year) year.textContent = new Date().getFullYear();
 
+function getWtfjhtFeedMarkup(items) {
+  return items
+    .map((item) => {
+      const date = item.date
+        ? new Date(item.date).toLocaleDateString(undefined, {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })
+        : '';
+
+      const safeTitle = escapeHtml(item.title || 'Untitled');
+      const safeSummary = escapeHtml(item.summary || '');
+      const safeUrl = escapeHtml(item.url || '#');
+
+      return `
+        <article class="feed-post">
+          ${date ? `<p class="feed-date">${escapeHtml(date)}</p>` : ''}
+          <h3>${safeTitle}</h3>
+          <p>${safeSummary}</p>
+          ${safeUrl !== '#' ? `<a class="feed-link" href="${safeUrl}" target="_blank" rel="noopener noreferrer">Read the full post</a>` : ''}
+        </article>
+      `;
+    })
+    .join('');
+}
+
 async function loadWtfjhtFeed() {
-  const feedPanel = document.querySelector("#wtfjht-feed");
+  const feedPanel = document.querySelector('#wtfjht-feed');
 
   if (!feedPanel) {
     return;
   }
 
   try {
-    const response = await fetch("/api/wtfjht", { cache: "no-store" });
+    const response = await fetch('/api/wtfjht', { cache: 'no-store' });
 
     if (!response.ok) {
-      throw new Error("Unable to load WTFJHT feed");
+      throw new Error('Unable to load WTFJHT feed');
     }
 
     const data = await response.json();
@@ -327,34 +342,17 @@ async function loadWtfjhtFeed() {
       return;
     }
 
-    feedPanel.innerHTML = items
-      .map((item) => {
-        const date = item.date
-          ? new Date(item.date).toLocaleDateString(undefined, {
-              month: "short",
-              day: "numeric",
-              year: "numeric"
-            })
-          : "";
+    const visibleItems = items.slice(0, feedInitialVisibleCount);
 
-        return `
-          <article class="feed-post">
-            ${date ? `<p class="feed-date">${date}</p>` : ""}
-            <h3>${item.title}</h3>
-            <p>${item.summary}</p>
-            <a class="feed-link" href="${item.url}" target="_blank" rel="noopener">
-              Read the full post
-            </a>
-          </article>
-        `;
-      })
-      .join("");
+    feedPanel.innerHTML = getWtfjhtFeedMarkup(visibleItems);
+    addFeedToggle(feedPanel, items, getWtfjhtFeedMarkup, 'updates');
   } catch (error) {
     feedPanel.innerHTML = `
       <article class="feed-post">
         <p>WTFJHT feed unavailable right now.</p>
       </article>
     `;
+    console.error(error);
   }
 }
 

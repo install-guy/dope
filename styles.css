@@ -928,3 +928,28 @@ h2 {
     max-width: 22rem;
   }
 }
+
+.feed-toggle {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--color-primary-dark);
+  padding: 0.65rem 1rem;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 120ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.feed-toggle:hover,
+.feed-toggle:focus-visible {
+  transform: translateY(-1px);
+  background: #eee7ff;
+  color: var(--color-primary);
+}
