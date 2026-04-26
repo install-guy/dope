@@ -300,3 +300,62 @@ if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
 
 const year = document.getElementById('year');
 if (year) year.textContent = new Date().getFullYear();
+
+async function loadWtfjhtFeed() {
+  const feedPanel = document.querySelector("#wtfjht-feed");
+
+  if (!feedPanel) {
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/wtfjht");
+
+    if (!response.ok) {
+      throw new Error("Unable to load WTFJHT feed");
+    }
+
+    const data = await response.json();
+    const items = Array.isArray(data.items) ? data.items : [];
+
+    if (!items.length) {
+      feedPanel.innerHTML = `
+        <article class="feed-post">
+          <p>No approved updates yet.</p>
+        </article>
+      `;
+      return;
+    }
+
+    feedPanel.innerHTML = items
+      .map((item) => {
+        const date = item.date
+          ? new Date(item.date).toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+              year: "numeric"
+            })
+          : "";
+
+        return `
+          <article class="feed-post">
+            ${date ? `<p class="feed-date">${date}</p>` : ""}
+            <h3>${item.title}</h3>
+            <p>${item.summary}</p>
+            <a class="feed-link" href="${item.url}" target="_blank" rel="noopener">
+              Read the full post
+            </a>
+          </article>
+        `;
+      })
+      .join("");
+  } catch (error) {
+    feedPanel.innerHTML = `
+      <article class="feed-post">
+        <p>WTFJHT feed unavailable right now.</p>
+      </article>
+    `;
+  }
+}
+
+loadWtfjhtFeed();
