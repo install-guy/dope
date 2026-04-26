@@ -892,3 +892,39 @@ h2 {
     max-height: 34px;
   }
 }
+
+/* Hero text bump */
+.hero-kicker {
+  font-size: clamp(1rem, 1vw, 1.2rem);
+  letter-spacing: 0.14em;
+}
+
+.hero p {
+  font-size: clamp(1.15rem, 1.4vw, 1.45rem);
+  font-weight: 600;
+  max-width: 36rem;
+}
+
+/* Responsive hero text bump */
+@media (max-width: 48rem) {
+  .hero-kicker {
+    font-size: clamp(1rem, 3.4vw, 1.18rem);
+  }
+
+  .hero p {
+    font-size: clamp(1.12rem, 4vw, 1.3rem);
+    line-height: 1.35;
+    max-width: 24rem;
+  }
+}
+
+@media (max-width: 30rem) {
+  .hero-kicker {
+    font-size: 1rem;
+  }
+
+  .hero p {
+    font-size: 1.12rem;
+    max-width: 22rem;
+  }
+}
