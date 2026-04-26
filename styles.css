@@ -857,3 +857,13 @@ h2 {
     min-height: 4.25rem;
   }
 }
+
+@media (max-width: 30rem) {
+  .feed-panel {
+    padding: var(--space-4);
+  }
+
+  .feed-post {
+    padding: var(--space-3);
+  }
+}
