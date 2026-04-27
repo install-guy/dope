@@ -7,7 +7,7 @@ const revealElements = document.querySelectorAll('.reveal');
 // -------------------------------------------------
 // Countdown settings
 // -------------------------------------------------
-const countdownTargetDate = '2029-01-22T12:00:00-05:00';
+const countdownTargetDate = '2029-01-20T12:00:00-05:00';
 const countdownExpiredMessage = 'We are live.';
 
 const countdownContainer = document.getElementById('countdown');
