@@ -495,6 +495,56 @@ h2 {
   font-size: 1.15rem;
 }
 
+.receipt-accordion {
+  margin-top: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #f9fbff;
+  overflow: hidden;
+}
+
+.receipt-accordion summary {
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  list-style-position: inside;
+}
+
+.receipt-accordion summary:hover,
+.receipt-accordion summary:focus-visible {
+  background: #eee7ff;
+  color: var(--color-primary);
+}
+
+.receipt-list {
+  margin: 0;
+  padding: 0 1rem 1rem 1.25rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.receipt-list li {
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.receipt-list strong {
+  color: var(--color-text);
+}
+
+.receipt-list a {
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.receipt-list a:hover,
+.receipt-list a:focus-visible {
+  color: var(--color-primary);
+}
+
 /* Updates center / Truth Social */
 .feed-note {
   margin-top: var(--space-4);
