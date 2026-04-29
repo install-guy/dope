@@ -665,6 +665,71 @@ h2 {
   text-decoration: underline;
 }
 
+#today-sentence {
+  background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+}
+
+#today-sentence .section-stack {
+  max-width: 58rem;
+}
+
+#today-sentence .feed-intro {
+  margin-top: 0;
+  text-align: center;
+}
+
+#today-sentence .feed-intro h2 {
+  color: var(--color-primary-dark);
+  font-weight: 900;
+}
+
+#today-sentence .feed-intro p {
+  margin-inline: auto;
+}
+
+#today-sentence .feed-panel {
+  position: relative;
+  margin-top: var(--space-4);
+  border-color: rgba(124, 58, 237, 0.2);
+  background: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+#today-sentence .feed-panel::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.35rem;
+  left: 1rem;
+  color: #facc15;
+  font-size: clamp(3rem, 8vw, 4.5rem);
+  line-height: 1;
+  font-weight: 900;
+  text-shadow: 0 2px 0 rgba(5, 8, 22, 0.16);
+}
+
+#today-sentence .feed-post {
+  border: 0;
+  padding-left: clamp(var(--space-4), 6vw, var(--space-6));
+}
+
+#today-sentence .feed-post h3 {
+  color: var(--color-primary-dark);
+  font-size: clamp(1.15rem, 2vw, 1.35rem);
+}
+
+#today-sentence .feed-post p:not(.feed-date) {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--color-text);
+}
+
+#today-sentence .feed-link {
+  align-self: center;
+  margin-top: 0;
+  font-size: var(--font-size-100);
+}
+
 .truth-follow-wrap {
   margin-top: var(--space-4);
 }
