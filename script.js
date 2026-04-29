@@ -318,6 +318,7 @@ function getWtfjhtFeedMarkup(items) {
 
 async function loadWtfjhtFeed() {
   const feedPanel = document.querySelector('#wtfjht-feed');
+  const latestLink = document.querySelector('#wtfjht-latest-link');
 
   if (!feedPanel) {
     return;
@@ -342,10 +343,14 @@ async function loadWtfjhtFeed() {
       return;
     }
 
-    const visibleItems = items.slice(0, feedInitialVisibleCount);
+    const visibleItems = items.slice(0, 1);
+    const latestItemUrl = visibleItems[0]?.url;
+
+    if (latestLink && latestItemUrl) {
+      latestLink.href = latestItemUrl;
+    }
 
     feedPanel.innerHTML = getWtfjhtFeedMarkup(visibleItems);
-    addFeedToggle(feedPanel, items, getWtfjhtFeedMarkup, 'updates');
   } catch (error) {
     feedPanel.innerHTML = `
       <article class="feed-post">
