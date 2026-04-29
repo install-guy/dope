@@ -455,12 +455,6 @@ h2 {
   max-width: 58rem;
 }
 
-.section-kicker {
-  max-width: 48rem;
-  font-weight: 700;
-  color: var(--color-primary-dark);
-}
-
 .accent-word {
   color: #facc15;
   font-weight: 600;
@@ -711,12 +705,6 @@ h2 {
   justify-content: space-between;
   gap: var(--space-6);
   flex-wrap: wrap;
-}
-
-.footer-note {
-  margin-top: 0.35rem;
-  color: #94a3b8;
-  font-size: var(--font-size-100);
 }
 
 .footer-contact {
