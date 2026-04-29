@@ -1087,6 +1087,7 @@ h2 {
   margin-top: var(--space-5);
 }
 
+.feed-intro h2,
 .feed-intro h3 {
   font-size: clamp(1.25rem, 2.4vw, 1.65rem);
   line-height: 1.15;
