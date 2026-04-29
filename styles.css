@@ -455,12 +455,6 @@ h2 {
   max-width: 58rem;
 }
 
-.section-kicker {
-  max-width: 48rem;
-  font-weight: 700;
-  color: var(--color-primary-dark);
-}
-
 .accent-word {
   color: #facc15;
   font-weight: 600;
@@ -475,7 +469,7 @@ h2 {
 }
 
 #why-it-matters {
-  padding-bottom: clamp(var(--space-4), 3vw, var(--space-5));
+  padding-bottom: var(--space-4);
 }
 
 .tag-acronym {
@@ -676,7 +670,7 @@ h2 {
 }
 
 #today-sentence {
-  padding-top: var(--space-4);
+  padding-top: var(--space-3);
   background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
 }
 
@@ -685,17 +679,20 @@ h2 {
   max-width: 56rem;
 }
 
-#today-sentence .feed-intro {
-  margin-top: 0;
+.today-summary {
+  margin-top: var(--space-4);
+  max-width: 56rem;
   text-align: left;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
 }
 
 .today-summary h2 {
   position: relative;
   display: inline-block;
-  margin-bottom: var(--space-2);
+  margin-bottom: 0.35rem;
   color: var(--color-primary-dark);
-  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
   line-height: 1.12;
   font-weight: 900;
 }
@@ -703,22 +700,22 @@ h2 {
 .today-summary h2::after {
   content: "";
   display: block;
-  width: 2.75rem;
-  height: 0.22rem;
-  margin-top: 0.4rem;
+  width: 2.4rem;
+  height: 0.2rem;
+  margin-top: 0.35rem;
   border-radius: 999px;
   background: linear-gradient(90deg, var(--color-secondary), #facc15);
 }
 
 .today-summary p {
-  max-width: 48rem;
-  margin-top: 0.5rem;
+  max-width: 44rem;
+  margin-top: 0.45rem;
   color: var(--color-text-muted);
 }
 
 #today-sentence .feed-panel {
   position: relative;
-  margin-top: 0;
+  margin-top: var(--space-2);
   border-color: rgba(124, 58, 237, 0.2);
   background: #fff;
   box-shadow: var(--shadow-md);
