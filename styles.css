@@ -1073,6 +1073,16 @@ h2 {
   color: var(--color-primary);
 }
 
+#updates-title {
+  font-size: clamp(1.25rem, 2.4vw, 1.65rem);
+  line-height: 1.15;
+}
+
+#updates-title + p {
+  margin-top: 0.35rem;
+  max-width: 48rem;
+}
+
 .feed-intro {
   margin-top: var(--space-5);
 }
