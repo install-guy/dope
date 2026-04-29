@@ -468,6 +468,10 @@ h2 {
   color: var(--color-text);
 }
 
+#why-it-matters {
+  padding-bottom: clamp(var(--space-5), 4vw, var(--space-6));
+}
+
 .tag-acronym {
   color: #facc15;
   font-weight: 900;
@@ -666,6 +670,7 @@ h2 {
 }
 
 #today-sentence {
+  padding-top: clamp(var(--space-4), 3vw, var(--space-5));
   background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
 }
 
@@ -689,7 +694,7 @@ h2 {
 
 #today-sentence .feed-panel {
   position: relative;
-  margin-top: var(--space-4);
+  margin-top: var(--space-3);
   border-color: rgba(124, 58, 237, 0.2);
   background: #fff;
   box-shadow: var(--shadow-md);
