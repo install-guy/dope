@@ -455,6 +455,12 @@ h2 {
   max-width: 58rem;
 }
 
+.section-kicker {
+  max-width: 48rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
 .accent-word {
   color: #facc15;
   font-weight: 600;
@@ -469,7 +475,7 @@ h2 {
 }
 
 #why-it-matters {
-  padding-bottom: clamp(var(--space-5), 4vw, var(--space-6));
+  padding-bottom: clamp(var(--space-4), 3vw, var(--space-5));
 }
 
 .tag-acronym {
@@ -670,31 +676,49 @@ h2 {
 }
 
 #today-sentence {
-  padding-top: clamp(var(--space-4), 3vw, var(--space-5));
+  padding-top: var(--space-4);
   background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
 }
 
 #today-sentence .section-stack {
-  max-width: 58rem;
+  gap: var(--space-3);
+  max-width: 56rem;
 }
 
 #today-sentence .feed-intro {
   margin-top: 0;
-  text-align: center;
+  text-align: left;
 }
 
-#today-sentence .feed-intro h2 {
+.today-summary h2 {
+  position: relative;
+  display: inline-block;
+  margin-bottom: var(--space-2);
   color: var(--color-primary-dark);
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  line-height: 1.12;
   font-weight: 900;
 }
 
-#today-sentence .feed-intro p {
-  margin-inline: auto;
+.today-summary h2::after {
+  content: "";
+  display: block;
+  width: 2.75rem;
+  height: 0.22rem;
+  margin-top: 0.4rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-secondary), #facc15);
+}
+
+.today-summary p {
+  max-width: 48rem;
+  margin-top: 0.5rem;
+  color: var(--color-text-muted);
 }
 
 #today-sentence .feed-panel {
   position: relative;
-  margin-top: var(--space-3);
+  margin-top: 0;
   border-color: rgba(124, 58, 237, 0.2);
   background: #fff;
   box-shadow: var(--shadow-md);
@@ -730,7 +754,6 @@ h2 {
 }
 
 #today-sentence .feed-link {
-  align-self: center;
   margin-top: 0;
   font-size: var(--font-size-100);
 }
