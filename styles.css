@@ -355,7 +355,7 @@ img {
   display: block;
   width: fit-content;
   max-width: 100%;
-  white-space: nowrap;
+ /*! white-space: nowrap; */
 }
 
 .hero p {
