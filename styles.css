@@ -765,7 +765,7 @@ h2 {
 
 #gas-prices .section-stack {
   gap: var(--space-4);
-  max-width: 56rem;
+  align-items: start;
 }
 
 .gas-price-intro h2 {
@@ -796,6 +796,7 @@ h2 {
 .aaa-gas-widget {
   display: grid;
   gap: var(--space-3);
+  width: 100%;
   max-width: 46rem;
   padding: var(--space-4);
   border: 1px solid rgba(124, 58, 237, 0.2);
