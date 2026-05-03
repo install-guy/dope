@@ -43,6 +43,11 @@
           ${renderPriceCard(national)}
           ${renderPriceCard(nh)}
         </div>
+        <p class="aaa-gas-widget__title aaa-gas-widget__title--sub">This day last year</p>
+        <div class="aaa-gas-widget__grid aaa-gas-widget__grid--compare">
+          ${renderComparisonCard(national)}
+          ${renderComparisonCard(nh)}
+        </div>
         <p class="aaa-gas-widget__source">
           ${date ? `Price as of ${escapeHtml(date)}. ` : ""}
           Source: <a href="${escapeHtml(source)}" target="_blank" rel="noopener noreferrer">AAA Fuel Prices</a>
@@ -61,6 +66,20 @@
         <p class="aaa-gas-widget__label">${escapeHtml(price.label)}</p>
         <p class="aaa-gas-widget__value">${escapeHtml(price.regular)}</p>
         <p class="aaa-gas-widget__date">Regular unleaded</p>
+      </div>
+    `;
+  }
+
+  function renderComparisonCard(price) {
+    if (!price?.yearAgoRegular) {
+      return "";
+    }
+
+    return `
+      <div class="aaa-gas-widget__price aaa-gas-widget__price--compare">
+        <p class="aaa-gas-widget__label">${escapeHtml(price.label)}</p>
+        <p class="aaa-gas-widget__value aaa-gas-widget__value--compare">${escapeHtml(price.yearAgoRegular)}</p>
+        <p class="aaa-gas-widget__date">Regular unleaded, year ago</p>
       </div>
     `;
   }

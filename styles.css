@@ -814,10 +814,19 @@ h2 {
   letter-spacing: 0.06em;
 }
 
+.aaa-gas-widget__title--sub {
+  margin-top: var(--space-2);
+  color: var(--color-text);
+}
+
 .aaa-gas-widget__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
+}
+
+.aaa-gas-widget__grid--compare {
+  gap: var(--space-2);
 }
 
 .aaa-gas-widget__price {
@@ -827,6 +836,11 @@ h2 {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: #fff;
+}
+
+.aaa-gas-widget__price--compare {
+  padding-block: var(--space-3);
+  background: #f9fbff;
 }
 
 .aaa-gas-widget__price::before {
@@ -867,6 +881,10 @@ h2 {
   font-size: clamp(1.8rem, 4vw, 2.4rem);
   font-weight: 900;
   line-height: 1;
+}
+
+.aaa-gas-widget__value--compare {
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
 }
 
 .aaa-gas-widget__source a {

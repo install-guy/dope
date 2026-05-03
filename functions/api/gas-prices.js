@@ -1,30 +1,19 @@
-const AAA_GAS_URL = "https://gasprices.aaa.com/?state=NH";
+const AAA_NATIONAL_URL = "https://gasprices.aaa.com/";
+const AAA_NH_URL = "https://gasprices.aaa.com/?state=NH";
 
 export async function onRequestGet() {
   try {
-    const response = await fetch(AAA_GAS_URL, {
-      headers: {
-        "User-Agent": "dopeoclock.com gas price reader",
-        "Accept": "text/html,application/xhtml+xml"
-      }
-    });
+    const [nationalText, newHampshireText] = await Promise.all([
+      fetchAaaText(AAA_NATIONAL_URL),
+      fetchAaaText(AAA_NH_URL)
+    ]);
 
-    if (!response.ok) {
-      return json(
-        {
-          ok: false,
-          error: `AAA request failed with status ${response.status}`
-        },
-        502
-      );
-    }
+    const national = parseAverage(nationalText, /Today's AAA National Average\s+\$?(\d+\.\d{3})\s+Price as of\s+([0-9/]+)/i);
+    const newHampshire = parseAverage(newHampshireText, /Today's AAA New Hampshire Avg\.\s+\$?(\d+\.\d{3})\s+Price as of\s+([0-9/]+)/i);
+    const nationalYearAgo = parseRowAverage(nationalText, "Year Ago Avg.");
+    const newHampshireYearAgo = parseRowAverage(newHampshireText, "Year Ago Avg.");
 
-    const html = await response.text();
-    const text = normalizeText(stripTags(decodeHtmlEntities(html)));
-    const national = parseAverage(text, /Today's AAA National Average\s+\$?(\d+\.\d{3})\s+Price as of\s+([0-9/]+)/i);
-    const newHampshire = parseAverage(text, /Today's AAA New Hampshire Avg\.\s+\$?(\d+\.\d{3})\s+Price as of\s+([0-9/]+)/i);
-
-    if (!national || !newHampshire) {
+    if (!national || !newHampshire || !nationalYearAgo || !newHampshireYearAgo) {
       return json(
         {
           ok: false,
@@ -36,17 +25,23 @@ export async function onRequestGet() {
 
     return json({
       ok: true,
-      source: AAA_GAS_URL,
+      source: AAA_NH_URL,
+      sources: {
+        national: AAA_NATIONAL_URL,
+        newHampshire: AAA_NH_URL
+      },
       fetchedAt: new Date().toISOString(),
       prices: {
         national: {
           label: "National average",
           regular: national.price,
+          yearAgoRegular: nationalYearAgo,
           priceDate: national.date
         },
         newHampshire: {
           label: "New Hampshire average",
           regular: newHampshire.price,
+          yearAgoRegular: newHampshireYearAgo,
           priceDate: newHampshire.date
         }
       }
@@ -60,6 +55,22 @@ export async function onRequestGet() {
       500
     );
   }
+}
+
+async function fetchAaaText(url) {
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": "dopeoclock.com gas price reader",
+      "Accept": "text/html,application/xhtml+xml"
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`AAA request failed with status ${response.status}`);
+  }
+
+  const html = await response.text();
+  return normalizeText(stripTags(decodeHtmlEntities(html)));
 }
 
 function json(data, status = 200) {
@@ -83,6 +94,12 @@ function parseAverage(text, pattern) {
     price: `$${match[1]}`,
     date: match[2]
   };
+}
+
+function parseRowAverage(text, rowLabel) {
+  const escapedLabel = rowLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = text.match(new RegExp(`${escapedLabel}\\s+\\$?(\\d+\\.\\d{3})`, "i"));
+  return match ? `$${match[1]}` : null;
 }
 
 function normalizeText(value = "") {
