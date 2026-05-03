@@ -8,11 +8,12 @@
       name="description"
       content="Honestly, what a dope!."
     />
-    <link rel="stylesheet" href="styles.css?v=3" />
+    <link rel="stylesheet" href="styles.css?v=4" />
 <link rel="icon" href="assets/images/favicon.ico" sizes="any" />
 <link rel="icon" type="image/png" href="assets/images/favicon-512.png" />
 <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
     <script defer src="script.js?v=7"></script>
+    <script defer src="assets/gas-prices-widget.js?v=1"></script>
   </head>
 
   <body>
@@ -137,7 +138,9 @@
   <div class="container section-stack">
     <div class="feed-intro today-summary">
       <h2 id="today-sentence-title">Today in One Sentence</h2>
-      >
+      <p>
+        One clean read before the firehose starts yelling again.
+      </p>
     </div>
 
     <div
@@ -149,7 +152,35 @@
         <p class="feed-date">Feed loading...</p>
         <p>Latest WTFJHT updates will appear here.</p>
       </article>
-    
+    </div>
+
+    <a
+      class="feed-link"
+      id="wtfjht-latest-link"
+      href="https://whatthefuckjusthappenedtoday.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Read the full day on WTFJHT
+    </a>
+  </div>
+</section>
+
+<section
+  id="gas-prices"
+  class="content-section section-light reveal"
+  aria-labelledby="gas-prices-title"
+>
+  <div class="container section-stack">
+    <div class="gas-price-intro">
+      <h2 id="gas-prices-title">Pump Check</h2>
+      <p>
+        National average vs. New Hampshire. Because vibes are one thing; the pump has a receipt.
+      </p>
+    </div>
+
+    <div data-aaa-gas-prices></div>
+  </div>
 </section>
 <!--
 <section
