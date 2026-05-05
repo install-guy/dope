@@ -38,7 +38,7 @@
 
     node.innerHTML = `
       <div class="aaa-gas-widget">
-        <p class="aaa-gas-widget__title">AAA gas averages: today vs. last year</p>
+        <p class="aaa-gas-widget__title">AAA gas averages: today vs. yesterday</p>
         <div class="aaa-gas-widget__grid">
           ${renderPriceCard(national, "USA")}
           ${renderPriceCard(nh, "NH")}
@@ -56,7 +56,7 @@
       return "";
     }
 
-    const delta = getPriceDelta(price.regular, price.yearAgoRegular);
+    const delta = getPriceDelta(price.regular, price.yesterdayRegular);
 
     return `
       <div class="aaa-gas-widget__price">
@@ -64,20 +64,17 @@
           <p class="aaa-gas-widget__label">${escapeHtml(price.label)}</p>
           <span class="aaa-gas-widget__badge" aria-hidden="true">${escapeHtml(badge)}</span>
         </div>
-        <p class="aaa-gas-widget__value">${escapeHtml(formatPrice(price.regular))}</p>
+        <p class="aaa-gas-widget__value">
+          ${escapeHtml(formatPrice(price.regular))}
+          ${delta ? `
+            <span class="aaa-gas-widget__delta aaa-gas-widget__delta--${delta.direction}" title="${escapeHtml(delta.label)}">
+              <span aria-hidden="true">${delta.symbol}</span>
+              <span class="visually-hidden">${escapeHtml(delta.label)}</span>
+            </span>
+          ` : ""}
+        </p>
         <p class="aaa-gas-widget__date">Today, regular unleaded</p>
-        ${price.yearAgoRegular ? `
-          <div class="aaa-gas-widget__compare">
-            <span>Same day last year</span>
-            <strong>${escapeHtml(formatPrice(price.yearAgoRegular))}</strong>
-          </div>
-        ` : ""}
-        ${delta ? `
-          <p class="aaa-gas-widget__delta aaa-gas-widget__delta--${delta.direction}">
-            <span aria-hidden="true">${delta.symbol}</span>
-            ${escapeHtml(delta.amount)} vs. last year
-          </p>
-        ` : ""}
+        ${price.yesterdayRegular ? `<p class="aaa-gas-widget__compare">Yesterday: <strong>${escapeHtml(formatPrice(price.yesterdayRegular))}</strong></p>` : ""}
       </div>
     `;
   }
@@ -106,14 +103,16 @@
       return {
         amount: "$0.00",
         direction: "flat",
-        symbol: "-"
+        symbol: "-",
+        label: "Unchanged from yesterday"
       };
     }
 
     return {
       amount: `$${Math.abs(difference).toFixed(2)}`,
       direction: difference > 0 ? "up" : "down",
-      symbol: difference > 0 ? "▲" : "▼"
+      symbol: difference > 0 ? "▲" : "▼",
+      label: `${difference > 0 ? "Up" : "Down"} $${Math.abs(difference).toFixed(2)} from yesterday`
     };
   }
 

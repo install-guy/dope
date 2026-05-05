@@ -10,10 +10,10 @@ export async function onRequestGet() {
 
     const national = parseAverage(nationalText, /Today's AAA National Average\s+\$?(\d+\.\d{3})\s+Price as of\s+([0-9/]+)/i);
     const newHampshire = parseAverage(newHampshireText, /Today's AAA New Hampshire Avg\.\s+\$?(\d+\.\d{3})\s+Price as of\s+([0-9/]+)/i);
-    const nationalYearAgo = parseRowAverage(nationalText, "Year Ago Avg.");
-    const newHampshireYearAgo = parseRowAverage(newHampshireText, "Year Ago Avg.");
+    const nationalYesterday = parseRowAverage(nationalText, "Yesterday Avg.");
+    const newHampshireYesterday = parseRowAverage(newHampshireText, "Yesterday Avg.");
 
-    if (!national || !newHampshire || !nationalYearAgo || !newHampshireYearAgo) {
+    if (!national || !newHampshire || !nationalYesterday || !newHampshireYesterday) {
       return json(
         {
           ok: false,
@@ -35,13 +35,13 @@ export async function onRequestGet() {
         national: {
           label: "National average",
           regular: national.price,
-          yearAgoRegular: nationalYearAgo,
+          yesterdayRegular: nationalYesterday,
           priceDate: national.date
         },
         newHampshire: {
           label: "New Hampshire average",
           regular: newHampshire.price,
-          yearAgoRegular: newHampshireYearAgo,
+          yesterdayRegular: newHampshireYesterday,
           priceDate: newHampshire.date
         }
       }
