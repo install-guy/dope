@@ -761,7 +761,7 @@ h2 {
 #today-word {
   padding-top: 0;
   padding-bottom: clamp(var(--space-5), 4vw, var(--space-6));
-  background: var(--color-surface);
+  background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
 }
 
 #today-word .section-stack {
@@ -769,17 +769,31 @@ h2 {
 }
 
 .vote-card {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.8fr);
-  gap: var(--space-5);
+  gap: var(--space-4);
   width: 100%;
   max-width: 56rem;
   padding: var(--space-5);
   border: 1px solid rgba(124, 58, 237, 0.22);
   border-radius: var(--radius-md);
   background:
-    linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
-  box-shadow: var(--shadow-sm);
+    linear-gradient(135deg, #ffffff 0%, #f6f0ff 55%, #fff7ed 100%);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.vote-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.35rem;
+  background: linear-gradient(180deg, var(--color-primary-dark), var(--color-secondary), #facc15);
+}
+
+.vote-card-copy {
+  position: relative;
 }
 
 .vote-kicker {
@@ -800,12 +814,18 @@ h2 {
 
 .vote-card p {
   max-width: 40rem;
+  font-weight: 600;
 }
 
 .vote-actions {
   display: grid;
   align-content: center;
   gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-4);
+  border: 1px solid rgba(124, 58, 237, 0.16);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.78);
 }
 
 .vote-actions label {
@@ -1335,6 +1355,14 @@ h2 {
     grid-template-columns: 1fr;
   }
 
+  .vote-card {
+    grid-template-columns: 1fr;
+  }
+
+  .vote-actions {
+    align-content: start;
+  }
+
   .hero {
   min-height: 27rem;
   align-items: center;
@@ -1446,10 +1474,6 @@ h2 {
   }
 
   .economic-pulse-widget__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .vote-card {
     grid-template-columns: 1fr;
   }
 }
