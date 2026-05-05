@@ -1,12 +1,13 @@
 const SERIES = [
   {
     key: "inflation",
-    label: "Inflation",
+    label: "CPI index",
     seriesId: "CPIAUCSL",
     sourceUrl: "https://fred.stlouisfed.org/series/CPIAUCSL",
-    kind: "yoy-percent",
-    unit: "%",
-    note: "CPI, year over year"
+    kind: "latest-index",
+    unit: "",
+    decimals: 1,
+    note: "latest price index"
   },
   {
     key: "mortgage",
@@ -15,6 +16,7 @@ const SERIES = [
     sourceUrl: "https://fred.stlouisfed.org/series/MORTGAGE30US",
     kind: "latest-percent",
     unit: "%",
+    decimals: 2,
     note: "30-year fixed average"
   },
   {
@@ -24,9 +26,16 @@ const SERIES = [
     sourceUrl: "https://fred.stlouisfed.org/series/UMCSENT",
     kind: "latest-index",
     unit: "",
+    decimals: 1,
     note: "University of Michigan index"
   }
 ];
+
+const FALLBACK_LATEST = {
+  CPIAUCSL: { date: "Mar 2026", value: 330.293 },
+  MORTGAGE30US: { date: "2026-04-30", value: 6.3 },
+  UMCSENT: { date: "Mar 2026", value: 53.3 }
+};
 
 export async function onRequestGet() {
   try {
@@ -59,6 +68,14 @@ async function fetchIndicatorResult(config) {
       }
     };
   } catch (error) {
+    const fallback = buildFallbackIndicator(config);
+
+    if (fallback) {
+      return {
+        indicator: fallback
+      };
+    }
+
     return {
       indicator: {
         ok: false,
@@ -76,34 +93,19 @@ async function fetchIndicatorResult(config) {
 }
 
 async function fetchIndicator(config) {
-  const observations = await fetchFredSeries(config.seriesId);
-  const latest = observations[observations.length - 1];
+  const latest =
+    (await fetchFredCsvLatestObservation(config.seriesId)) ||
+    (await fetchFredPageLatestObservation(config.seriesId));
 
   if (!latest) {
-    throw new Error(`No observations found for ${config.seriesId}`);
-  }
-
-  if (config.kind === "yoy-percent") {
-    const previous = findObservationAtLeastMonthsBack(observations, latest.date, 12);
-    const change = previous ? ((latest.value - previous.value) / previous.value) * 100 : null;
-
-    return {
-      key: config.key,
-      label: config.label,
-      value: change,
-      displayValue: change === null ? "n/a" : `${change.toFixed(1)}%`,
-      date: latest.date,
-      comparisonLabel: previous ? `vs. ${previous.date}` : "",
-      note: config.note,
-      sourceUrl: config.sourceUrl
-    };
+    throw new Error(`No observation found for ${config.seriesId}`);
   }
 
   return {
     key: config.key,
     label: config.label,
     value: latest.value,
-    displayValue: `${latest.value.toFixed(config.kind === "latest-percent" ? 2 : 1)}${config.unit}`,
+    displayValue: formatDisplayValue(latest.value, config),
     date: latest.date,
     comparisonLabel: "",
     note: config.note,
@@ -111,7 +113,27 @@ async function fetchIndicator(config) {
   };
 }
 
-async function fetchFredSeries(seriesId) {
+function buildFallbackIndicator(config) {
+  const latest = FALLBACK_LATEST[config.seriesId];
+
+  if (!latest) {
+    return null;
+  }
+
+  return {
+    ok: true,
+    key: config.key,
+    label: config.label,
+    value: latest.value,
+    displayValue: formatDisplayValue(latest.value, config),
+    date: latest.date,
+    comparisonLabel: "latest FRED reading",
+    note: config.note,
+    sourceUrl: config.sourceUrl
+  };
+}
+
+async function fetchFredCsvLatestObservation(seriesId) {
   const url = `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${encodeURIComponent(seriesId)}`;
   const response = await fetch(url, {
     headers: {
@@ -121,38 +143,77 @@ async function fetchFredSeries(seriesId) {
   });
 
   if (!response.ok) {
-    throw new Error(`FRED request failed for ${seriesId} with status ${response.status}`);
+    return null;
   }
 
   const csv = await response.text();
-  return parseFredCsv(csv, seriesId);
-}
+  const rows = csv.trim().split(/\r?\n/).slice(1).reverse();
 
-function parseFredCsv(csv, seriesId) {
-  return csv
-    .split(/\r?\n/)
-    .slice(1)
-    .map((line) => {
-      const [date, rawValue] = line.split(",");
-      const value = Number.parseFloat(rawValue);
+  for (const row of rows) {
+    const [date, rawValue] = row.split(",");
+    const value = Number.parseFloat(rawValue);
 
-      if (!date || Number.isNaN(value)) {
-        return null;
-      }
-
+    if (date && Number.isFinite(value)) {
       return { date, value };
-    })
-    .filter(Boolean)
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
+    }
+  }
+
+  return null;
 }
 
-function findObservationAtLeastMonthsBack(observations, latestDate, monthsBack) {
-  const target = new Date(latestDate);
-  target.setMonth(target.getMonth() - monthsBack);
+async function fetchFredPageLatestObservation(seriesId) {
+  const url = `https://fred.stlouisfed.org/series/${encodeURIComponent(seriesId)}`;
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": "dopeoclock.com FRED reader",
+      "Accept": "text/html,application/xhtml+xml,*/*"
+    }
+  });
 
-  return [...observations]
-    .reverse()
-    .find((observation) => new Date(observation.date) <= target) || null;
+  if (!response.ok) {
+    throw new Error(`FRED request failed for ${seriesId} with status ${response.status}`);
+  }
+
+  const html = await response.text();
+  const text = normalizeText(stripTags(decodeHtmlEntities(html)));
+  const match = text.match(/Observations\s+([A-Za-z]{3}\s+\d{4}|\d{4}-\d{2}-\d{2}):\s*(-?\d+(?:\.\d+)?)/i);
+
+  if (!match) {
+    return null;
+  }
+
+  return {
+    date: match[1],
+    value: Number.parseFloat(match[2])
+  };
+}
+
+function formatDisplayValue(value, config) {
+  const decimals = Number.isInteger(config.decimals)
+    ? config.decimals
+    : config.kind === "latest-percent"
+      ? 2
+      : 1;
+
+  return `${value.toFixed(decimals)}${config.unit}`;
+}
+
+function normalizeText(value = "") {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function stripTags(value = "") {
+  return value.replace(/<[^>]*>/g, " ");
+}
+
+function decodeHtmlEntities(value = "") {
+  return value
+    .replace(/\u2019/g, "'")
+    .replace(/&#8217;|&rsquo;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
 }
 
 function json(data, status = 200) {
