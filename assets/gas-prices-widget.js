@@ -38,15 +38,10 @@
 
     node.innerHTML = `
       <div class="aaa-gas-widget">
-        <p class="aaa-gas-widget__title">Today's AAA gas averages</p>
+        <p class="aaa-gas-widget__title">AAA gas averages: today vs. last year</p>
         <div class="aaa-gas-widget__grid">
-          ${renderPriceCard(national)}
-          ${renderPriceCard(nh)}
-        </div>
-        <p class="aaa-gas-widget__title aaa-gas-widget__title--sub">Same day last year, for comparison</p>
-        <div class="aaa-gas-widget__grid aaa-gas-widget__grid--compare">
-          ${renderComparisonCard(national)}
-          ${renderComparisonCard(nh)}
+          ${renderPriceCard(national, "USA")}
+          ${renderPriceCard(nh, "NH")}
         </div>
         <p class="aaa-gas-widget__source">
           ${date ? `Price as of ${escapeHtml(date)}. ` : ""}
@@ -56,30 +51,33 @@
     `;
   }
 
-  function renderPriceCard(price) {
+  function renderPriceCard(price, badge) {
     if (!price) {
       return "";
     }
 
+    const delta = getPriceDelta(price.regular, price.yearAgoRegular);
+
     return `
       <div class="aaa-gas-widget__price">
-        <p class="aaa-gas-widget__label">${escapeHtml(price.label)}</p>
+        <div class="aaa-gas-widget__heading">
+          <p class="aaa-gas-widget__label">${escapeHtml(price.label)}</p>
+          <span class="aaa-gas-widget__badge" aria-hidden="true">${escapeHtml(badge)}</span>
+        </div>
         <p class="aaa-gas-widget__value">${escapeHtml(formatPrice(price.regular))}</p>
         <p class="aaa-gas-widget__date">Today, regular unleaded</p>
-      </div>
-    `;
-  }
-
-  function renderComparisonCard(price) {
-    if (!price?.yearAgoRegular) {
-      return "";
-    }
-
-    return `
-      <div class="aaa-gas-widget__price aaa-gas-widget__price--compare">
-        <p class="aaa-gas-widget__label">${escapeHtml(price.label)}</p>
-        <p class="aaa-gas-widget__value aaa-gas-widget__value--compare">${escapeHtml(formatPrice(price.yearAgoRegular))}</p>
-        <p class="aaa-gas-widget__date">Same date last year</p>
+        ${price.yearAgoRegular ? `
+          <div class="aaa-gas-widget__compare">
+            <span>Same day last year</span>
+            <strong>${escapeHtml(formatPrice(price.yearAgoRegular))}</strong>
+          </div>
+        ` : ""}
+        ${delta ? `
+          <p class="aaa-gas-widget__delta aaa-gas-widget__delta--${delta.direction}">
+            <span aria-hidden="true">${delta.symbol}</span>
+            ${escapeHtml(delta.amount)} vs. last year
+          </p>
+        ` : ""}
       </div>
     `;
   }
@@ -92,6 +90,36 @@
     }
 
     return `$${amount.toFixed(2)}`;
+  }
+
+  function getPriceDelta(currentValue, previousValue) {
+    const current = parsePrice(currentValue);
+    const previous = parsePrice(previousValue);
+
+    if (current === null || previous === null) {
+      return null;
+    }
+
+    const difference = current - previous;
+
+    if (Math.abs(difference) < 0.005) {
+      return {
+        amount: "$0.00",
+        direction: "flat",
+        symbol: "-"
+      };
+    }
+
+    return {
+      amount: `$${Math.abs(difference).toFixed(2)}`,
+      direction: difference > 0 ? "up" : "down",
+      symbol: difference > 0 ? "▲" : "▼"
+    };
+  }
+
+  function parsePrice(value) {
+    const amount = Number.parseFloat(String(value ?? "").replace(/[^0-9.]/g, ""));
+    return Number.isNaN(amount) ? null : amount;
   }
 
   async function loadWidget(node) {

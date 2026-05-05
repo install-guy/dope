@@ -818,19 +818,10 @@ h2 {
   letter-spacing: 0.06em;
 }
 
-.aaa-gas-widget__title--sub {
-  margin-top: var(--space-2);
-  color: var(--color-text);
-}
-
 .aaa-gas-widget__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
-}
-
-.aaa-gas-widget__grid--compare {
-  gap: var(--space-2);
 }
 
 .aaa-gas-widget__price {
@@ -840,11 +831,6 @@ h2 {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: #fff;
-}
-
-.aaa-gas-widget__price--compare {
-  padding-block: var(--space-3);
-  background: #f9fbff;
 }
 
 .aaa-gas-widget__price::before {
@@ -864,6 +850,30 @@ h2 {
   font-weight: 900;
   line-height: 1;
   box-shadow: 0 1px 0 rgba(5, 8, 22, 0.22);
+}
+
+.aaa-gas-widget__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-right: 2rem;
+}
+
+.aaa-gas-widget__badge {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  min-height: 1.25rem;
+  padding: 0.1rem 0.35rem;
+  border: 1px solid rgba(124, 58, 237, 0.22);
+  border-radius: 999px;
+  background: #f9fbff;
+  color: var(--color-primary-dark);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
 }
 
 .aaa-gas-widget__label,
@@ -887,8 +897,43 @@ h2 {
   line-height: 1;
 }
 
-.aaa-gas-widget__value--compare {
-  font-size: clamp(1.35rem, 3vw, 1.75rem);
+.aaa-gas-widget__compare {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-100);
+}
+
+.aaa-gas-widget__compare strong {
+  color: var(--color-text);
+  font-size: 1.1rem;
+}
+
+.aaa-gas-widget__delta {
+  margin-top: var(--space-2);
+  font-size: var(--font-size-100);
+  font-weight: 900;
+}
+
+.aaa-gas-widget__delta span {
+  margin-right: 0.2rem;
+}
+
+.aaa-gas-widget__delta--up {
+  color: #dc2626;
+}
+
+.aaa-gas-widget__delta--down {
+  color: #15803d;
+}
+
+.aaa-gas-widget__delta--flat {
+  color: var(--color-text-muted);
 }
 
 .aaa-gas-widget__source a {
