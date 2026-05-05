@@ -1022,7 +1022,7 @@ h2 {
   }
 
   .countdown-label {
-    font-size: clamp(0.78rem, 3.1vw, 0.95rem);
+    font-size: clamp(0.95rem, 4vw, 1.15rem);
     line-height: 1.1;
   }
 
@@ -1033,17 +1033,17 @@ h2 {
   }
 
   .countdown-item {
-    padding: 0.38rem 0.25rem;
+    padding: 0.48rem 0.25rem;
     border-radius: 0.55rem;
   }
 
   .countdown-item span {
-    font-size: clamp(0.82rem, 3.4vw, 1rem);
+    font-size: clamp(1.05rem, 4.8vw, 1.35rem);
     line-height: 1.05;
   }
 
   .countdown-item small {
-    font-size: clamp(0.48rem, 2.2vw, 0.62rem);
+    font-size: clamp(0.52rem, 2.4vw, 0.68rem);
     letter-spacing: 0.035em;
   }
 
@@ -1143,15 +1143,15 @@ h2 {
   }
 
   .countdown-item {
-    padding: 0.32rem 0.15rem;
+    padding: 0.42rem 0.15rem;
   }
 
   .countdown-item span {
-    font-size: 0.82rem;
+    font-size: clamp(1rem, 5vw, 1.2rem);
   }
 
   .countdown-item small {
-    font-size: 0.46rem;
+    font-size: clamp(0.48rem, 2.6vw, 0.58rem);
   }
 
   .feed-panel {
