@@ -761,7 +761,7 @@ h2 {
 #today-word {
   padding-top: 0;
   padding-bottom: clamp(var(--space-5), 4vw, var(--space-6));
-  background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+  background: linear-gradient(180deg, #f9fbff 0%, #ffffff 100%);
 }
 
 #today-word .section-stack {
@@ -769,46 +769,44 @@ h2 {
 }
 
 .vote-card {
-  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.8fr);
   gap: var(--space-4);
   width: 100%;
   max-width: 56rem;
-  padding: var(--space-5);
-  border: 1px solid rgba(124, 58, 237, 0.22);
+  padding: var(--space-4);
+  border: 1px solid rgba(249, 115, 22, 0.26);
   border-radius: var(--radius-md);
-  background:
-    linear-gradient(135deg, #ffffff 0%, #f6f0ff 55%, #fff7ed 100%);
-  box-shadow: var(--shadow-md);
-  overflow: hidden;
-}
-
-.vote-card::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 0.35rem;
-  background: linear-gradient(180deg, var(--color-primary-dark), var(--color-secondary), #facc15);
-}
-
-.vote-card-copy {
-  position: relative;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
 }
 
 .vote-kicker {
+  position: relative;
+  display: inline-block;
   margin: 0 0 var(--space-2);
-  color: var(--color-secondary);
-  font-size: var(--font-size-100);
+  color: var(--color-secondary-dark);
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  line-height: 1.12;
   font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.vote-kicker::after {
+  content: "";
+  display: block;
+  width: 2.4rem;
+  height: 0.2rem;
+  margin-top: 0.35rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #facc15, var(--color-secondary));
 }
 
 .vote-card h2 {
-  color: var(--color-primary-dark);
-  font-size: clamp(2.35rem, 7vw, 4rem);
-  line-height: 0.95;
+  color: var(--color-text);
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  line-height: 1;
   font-weight: 900;
 }
 
@@ -822,10 +820,6 @@ h2 {
   align-content: center;
   gap: var(--space-3);
   min-width: 0;
-  padding: var(--space-4);
-  border: 1px solid rgba(124, 58, 237, 0.16);
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.78);
 }
 
 .vote-actions label {
