@@ -43,7 +43,7 @@
           ${renderPriceCard(national)}
           ${renderPriceCard(nh)}
         </div>
-        <p class="aaa-gas-widget__title aaa-gas-widget__title--sub">This day last year</p>
+        <p class="aaa-gas-widget__title aaa-gas-widget__title--sub">Same day last year, for comparison</p>
         <div class="aaa-gas-widget__grid aaa-gas-widget__grid--compare">
           ${renderComparisonCard(national)}
           ${renderComparisonCard(nh)}
@@ -64,8 +64,8 @@
     return `
       <div class="aaa-gas-widget__price">
         <p class="aaa-gas-widget__label">${escapeHtml(price.label)}</p>
-        <p class="aaa-gas-widget__value">${escapeHtml(price.regular)}</p>
-        <p class="aaa-gas-widget__date">Regular unleaded</p>
+        <p class="aaa-gas-widget__value">${escapeHtml(formatPrice(price.regular))}</p>
+        <p class="aaa-gas-widget__date">Today, regular unleaded</p>
       </div>
     `;
   }
@@ -78,10 +78,20 @@
     return `
       <div class="aaa-gas-widget__price aaa-gas-widget__price--compare">
         <p class="aaa-gas-widget__label">${escapeHtml(price.label)}</p>
-        <p class="aaa-gas-widget__value aaa-gas-widget__value--compare">${escapeHtml(price.yearAgoRegular)}</p>
-        <p class="aaa-gas-widget__date">Regular unleaded, year ago</p>
+        <p class="aaa-gas-widget__value aaa-gas-widget__value--compare">${escapeHtml(formatPrice(price.yearAgoRegular))}</p>
+        <p class="aaa-gas-widget__date">Same date last year</p>
       </div>
     `;
+  }
+
+  function formatPrice(value) {
+    const amount = Number.parseFloat(String(value ?? "").replace(/[^0-9.]/g, ""));
+
+    if (Number.isNaN(amount)) {
+      return value;
+    }
+
+    return `$${amount.toFixed(2)}`;
   }
 
   async function loadWidget(node) {
