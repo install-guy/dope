@@ -30,10 +30,11 @@ const SERIES = [
 
 export async function onRequestGet() {
   try {
-    const indicators = await Promise.all(SERIES.map(fetchIndicator));
+    const results = await Promise.all(SERIES.map(fetchIndicatorResult));
+    const indicators = results.map((result) => result.indicator);
 
     return json({
-      ok: true,
+      ok: indicators.some((indicator) => indicator.ok),
       source: "FRED",
       fetchedAt: new Date().toISOString(),
       indicators
@@ -49,9 +50,34 @@ export async function onRequestGet() {
   }
 }
 
+async function fetchIndicatorResult(config) {
+  try {
+    return {
+      indicator: {
+        ok: true,
+        ...(await fetchIndicator(config))
+      }
+    };
+  } catch (error) {
+    return {
+      indicator: {
+        ok: false,
+        key: config.key,
+        label: config.label,
+        displayValue: "n/a",
+        date: "",
+        comparisonLabel: "",
+        note: config.note,
+        sourceUrl: config.sourceUrl,
+        error: error instanceof Error ? error.message : "Unavailable"
+      }
+    };
+  }
+}
+
 async function fetchIndicator(config) {
   const observations = await fetchFredSeries(config.seriesId);
-  const latest = observations.at(-1);
+  const latest = observations[observations.length - 1];
 
   if (!latest) {
     throw new Error(`No observations found for ${config.seriesId}`);

@@ -56,11 +56,13 @@
           <span class="economic-pulse-widget__badge" aria-hidden="true">${escapeHtml(badge)}</span>
         </div>
         <p class="economic-pulse-widget__value">${escapeHtml(indicator.displayValue)}</p>
-        <p class="economic-pulse-widget__note">${escapeHtml(indicator.note)}</p>
-        <p class="economic-pulse-widget__date">
-          ${escapeHtml(indicator.date)}
-          ${indicator.comparisonLabel ? `<span>${escapeHtml(indicator.comparisonLabel)}</span>` : ""}
-        </p>
+        <p class="economic-pulse-widget__note">${escapeHtml(indicator.ok === false ? "Signal unavailable right now" : indicator.note)}</p>
+        ${indicator.date ? `
+          <p class="economic-pulse-widget__date">
+            ${escapeHtml(indicator.date)}
+            ${indicator.comparisonLabel ? `<span>${escapeHtml(indicator.comparisonLabel)}</span>` : ""}
+          </p>
+        ` : ""}
         <a class="economic-pulse-widget__link" href="${escapeHtml(indicator.sourceUrl)}" target="_blank" rel="noopener noreferrer">FRED receipt</a>
       </article>
     `;
@@ -87,7 +89,7 @@
 
       const data = await response.json();
 
-      if (!data.ok) {
+      if (!Array.isArray(data.indicators)) {
         throw new Error(data.error || "Economic pulse data unavailable");
       }
 
