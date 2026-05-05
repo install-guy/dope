@@ -78,8 +78,7 @@ function parseRssItems(xml) {
       const description = stripTags(getTagValue(item, "description"));
       const pubDate = getTagValue(item, "pubDate");
       const link = stripTags(getTagValue(item, "link"));
-
-      const content = description || title || "Recent update";
+      const content = description;
       const isoDate = toIsoDate(pubDate);
 
       return {
@@ -88,8 +87,18 @@ function parseRssItems(xml) {
         link
       };
     })
-    .filter((post) => post.content)
+    .filter((post) => hasUsefulContent(post.content))
     .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+}
+
+function hasUsefulContent(value = "") {
+  const content = value.trim();
+
+  if (!content) {
+    return false;
+  }
+
+  return !/^\[?no title\]?\s*-\s*post from\b/i.test(content);
 }
 
 function toIsoDate(value) {

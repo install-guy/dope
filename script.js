@@ -153,9 +153,19 @@ function normalizeJsonPosts(payload) {
       content: post.content || post.text || post.body || post.message,
       link: post.link || post.url || post.permalink,
     }))
-    .filter((post) => post.content)
+    .filter((post) => hasUsefulTruthContent(post.content))
     .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
     .slice(0, truthFeedMaxPosts);
+}
+
+function hasUsefulTruthContent(value = '') {
+  const content = String(value).trim();
+
+  if (!content) {
+    return false;
+  }
+
+  return !/^\[?no title\]?\s*-\s*post from\b/i.test(content);
 }
 
 function addFeedToggle(feedPanel, allItems, renderCallback, label = 'posts') {
