@@ -1082,7 +1082,8 @@ h2 {
   max-width: 56rem;
 }
 
-.cost-pulse-intro h2 {
+.cost-pulse-intro h2,
+#bank-spread-title {
   position: relative;
   display: inline-block;
   margin-bottom: var(--space-2);
@@ -1092,7 +1093,8 @@ h2 {
   font-weight: 900;
 }
 
-.cost-pulse-intro h2::after {
+.cost-pulse-intro h2::after,
+#bank-spread-title::after {
   content: "";
   display: block;
   width: 2.4rem;
@@ -1102,9 +1104,15 @@ h2 {
   background: linear-gradient(90deg, var(--color-secondary), #facc15);
 }
 
-.cost-pulse-intro p {
+.cost-pulse-intro p,
+#bank-spread .section-lead {
   max-width: 44rem;
   color: var(--color-text-muted);
+}
+
+#bank-spread .section-lead {
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 .economic-pulse-widget {
