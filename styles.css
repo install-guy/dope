@@ -1056,7 +1056,13 @@ h2 {
 
 #cost-pulse {
   padding-top: clamp(var(--space-5), 4vw, var(--space-6));
+  padding-bottom: clamp(var(--space-5), 5vw, var(--space-7));
   background: var(--color-surface);
+}
+
+#cost-pulse + #updates {
+  padding-top: clamp(var(--space-5), 5vw, var(--space-7));
+  background: var(--color-surface-alt);
 }
 
 #cost-pulse .section-stack {
@@ -1621,13 +1627,38 @@ h2 {
 }
 
 #updates-title {
+  position: relative;
+  display: inline-block;
+  margin-bottom: var(--space-2);
+  color: var(--color-primary-dark);
   font-size: clamp(1.25rem, 2.4vw, 1.65rem);
   line-height: 1.15;
+  font-weight: 900;
+}
+
+#updates-title::after {
+  content: "";
+  display: block;
+  width: 2.4rem;
+  height: 0.2rem;
+  margin-top: 0.35rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-secondary), #facc15);
 }
 
 #updates-title + p {
   margin-top: 0.35rem;
   max-width: 48rem;
+}
+
+#updates .section-stack {
+  align-items: start;
+}
+
+#updates .feed-panel {
+  width: 100%;
+  max-width: 56rem;
+  margin-top: var(--space-3);
 }
 
 .feed-intro {
