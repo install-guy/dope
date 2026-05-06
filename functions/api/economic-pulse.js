@@ -107,7 +107,10 @@ async function fetchIndicator(config) {
     value: latest.value,
     displayValue: formatDisplayValue(latest.value, config),
     date: latest.date,
-    comparisonLabel: "",
+    previousValue: latest.previousValue,
+    previousDate: latest.previousDate,
+    delta: getDelta(latest.value, latest.previousValue, config),
+    comparisonLabel: getComparisonLabel(latest, config),
     note: config.note,
     sourceUrl: config.sourceUrl
   };
@@ -149,16 +152,31 @@ async function fetchFredCsvLatestObservation(seriesId) {
   const csv = await response.text();
   const rows = csv.trim().split(/\r?\n/).slice(1).reverse();
 
+  const observations = [];
+
   for (const row of rows) {
     const [date, rawValue] = row.split(",");
     const value = Number.parseFloat(rawValue);
 
     if (date && Number.isFinite(value)) {
-      return { date, value };
+      observations.push({ date, value });
+
+      if (observations.length === 2) {
+        break;
+      }
     }
   }
 
-  return null;
+  if (!observations.length) {
+    return null;
+  }
+
+  return {
+    date: observations[0].date,
+    value: observations[0].value,
+    previousDate: observations[1]?.date || "",
+    previousValue: observations[1]?.value
+  };
 }
 
 async function fetchFredPageLatestObservation(seriesId) {
@@ -196,6 +214,33 @@ function formatDisplayValue(value, config) {
       : 1;
 
   return `${value.toFixed(decimals)}${config.unit}`;
+}
+
+function getDelta(current, previous, config) {
+  if (!Number.isFinite(current) || !Number.isFinite(previous)) {
+    return null;
+  }
+
+  const change = current - previous;
+  const direction = change > 0 ? "up" : change < 0 ? "down" : "flat";
+  const isGood = config.key === "sentiment" ? change > 0 : change < 0;
+
+  return {
+    change,
+    direction,
+    tone: direction === "flat" ? "flat" : isGood ? "good" : "bad",
+    displayChange: `${Math.abs(change).toFixed(config.kind === "latest-percent" ? 2 : 1)}${config.unit}`
+  };
+}
+
+function getComparisonLabel(latest, config) {
+  const delta = getDelta(latest.value, latest.previousValue, config);
+
+  if (!delta || !latest.previousDate) {
+    return "";
+  }
+
+  return `${delta.direction} ${delta.displayChange} from ${latest.previousDate}`;
 }
 
 function normalizeText(value = "") {

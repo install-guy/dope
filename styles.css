@@ -1191,11 +1191,33 @@ h2 {
 }
 
 .economic-pulse-widget__value {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
   margin: 0.3rem 0;
   color: var(--color-text);
   font-size: clamp(1.6rem, 3.4vw, 2.1rem);
   font-weight: 900;
   line-height: 1;
+}
+
+.economic-pulse-widget__delta {
+  display: inline-flex;
+  align-items: center;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 900;
+}
+
+.economic-pulse-widget__delta--bad {
+  color: #dc2626;
+}
+
+.economic-pulse-widget__delta--good {
+  color: #15803d;
+}
+
+.economic-pulse-widget__delta--flat {
+  color: var(--color-text-muted);
 }
 
 .economic-pulse-widget__basket {

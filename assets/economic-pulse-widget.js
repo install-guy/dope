@@ -55,7 +55,10 @@
           <p class="economic-pulse-widget__label">${escapeHtml(indicator.label)}</p>
           <span class="economic-pulse-widget__badge" aria-hidden="true">${escapeHtml(badge)}</span>
         </div>
-        <p class="economic-pulse-widget__value">${escapeHtml(indicator.displayValue)}</p>
+        <p class="economic-pulse-widget__value">
+          <span>${escapeHtml(indicator.displayValue)}</span>
+          ${renderDelta(indicator.delta)}
+        </p>
         ${renderIndicatorVisual(indicator)}
         <p class="economic-pulse-widget__note">${escapeHtml(indicator.ok === false ? "Signal unavailable right now" : indicator.note)}</p>
         ${indicator.date ? `
@@ -66,6 +69,22 @@
         ` : ""}
         <a class="economic-pulse-widget__link" href="${escapeHtml(indicator.sourceUrl)}" target="_blank" rel="noopener noreferrer">FRED receipt</a>
       </article>
+    `;
+  }
+
+  function renderDelta(delta) {
+    if (!delta || !delta.direction || delta.direction === "flat") {
+      return "";
+    }
+
+    const symbol = delta.direction === "up" ? "▲" : "▼";
+    const label = `${delta.direction} ${delta.displayChange || ""}`.trim();
+    const tone = delta.tone === "good" ? "good" : delta.tone === "bad" ? "bad" : "flat";
+
+    return `
+      <span class="economic-pulse-widget__delta economic-pulse-widget__delta--${escapeHtml(tone)}" aria-label="${escapeHtml(label)}">
+        <span aria-hidden="true">${escapeHtml(symbol)}</span>
+      </span>
     `;
   }
 
