@@ -1279,6 +1279,30 @@ h2 {
   color: var(--color-primary);
 }
 
+.bank-spread-grid {
+  align-items: stretch;
+}
+
+#bank-spread .card {
+  position: relative;
+}
+
+#bank-spread .card::before {
+  content: "$";
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: inline-grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 999px;
+  background: #facc15;
+  color: var(--color-dark);
+  font-weight: 900;
+  box-shadow: 0 2px 0 rgba(5, 8, 22, 0.18);
+}
+
 .truth-follow-wrap {
   margin-top: var(--space-4);
 }
