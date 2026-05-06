@@ -472,6 +472,16 @@ h2 {
   padding-bottom: var(--space-3);
 }
 
+#today-word,
+#today-sentence,
+#gas-prices,
+#cost-pulse,
+#bank-spread,
+#updates,
+#final-vote {
+  padding-block: clamp(var(--space-5), 5vw, var(--space-7));
+}
+
 .tag-acronym {
   color: #facc15;
   font-weight: 900;
@@ -670,8 +680,6 @@ h2 {
 }
 
 #today-sentence {
-  padding-top: 0;
-  padding-bottom: clamp(var(--space-5), 4vw, var(--space-6));
   background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
 }
 
@@ -760,8 +768,6 @@ h2 {
 
 #today-word,
 #final-vote {
-  padding-top: 0;
-  padding-bottom: clamp(var(--space-5), 4vw, var(--space-6));
   background: linear-gradient(180deg, #f9fbff 0%, #ffffff 100%);
 }
 
@@ -771,7 +777,6 @@ h2 {
 }
 
 #final-vote {
-  padding-top: clamp(var(--space-5), 5vw, var(--space-7));
   background: var(--color-surface);
 }
 
@@ -874,7 +879,6 @@ h2 {
 }
 
 #gas-prices {
-  padding-top: clamp(var(--space-5), 4vw, var(--space-6));
   background: var(--color-surface-alt);
 }
 
@@ -1062,13 +1066,10 @@ h2 {
 }
 
 #cost-pulse {
-  padding-top: clamp(var(--space-5), 4vw, var(--space-6));
-  padding-bottom: clamp(var(--space-5), 5vw, var(--space-7));
   background: var(--color-surface);
 }
 
 #cost-pulse + #updates {
-  padding-top: clamp(var(--space-5), 5vw, var(--space-7));
   background: var(--color-surface-alt);
 }
 
