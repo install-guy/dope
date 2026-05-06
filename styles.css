@@ -1078,7 +1078,9 @@ h2 {
 }
 
 #cost-pulse .cost-pulse-intro,
-#cost-pulse .economic-pulse-widget {
+#cost-pulse .economic-pulse-widget,
+#bank-spread .section-lead,
+.bank-spread-panel {
   max-width: 56rem;
 }
 
@@ -1104,13 +1106,14 @@ h2 {
   background: linear-gradient(90deg, var(--color-secondary), #facc15);
 }
 
-.cost-pulse-intro p,
-#bank-spread .section-lead {
+.cost-pulse-intro p {
   max-width: 44rem;
   color: var(--color-text-muted);
 }
 
 #bank-spread .section-lead {
+  max-width: 44rem;
+  color: var(--color-text-muted);
   font-size: 1rem;
   font-weight: 400;
 }
@@ -1288,11 +1291,30 @@ h2 {
 }
 
 .bank-spread-grid {
+  margin-top: 0;
   align-items: stretch;
+}
+
+.bank-spread-panel {
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-4);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+  box-shadow: var(--shadow-sm);
+}
+
+.bank-spread-panel .section-tagline {
+  margin-top: 0;
+  color: var(--color-text);
+  font-size: clamp(1rem, 1.8vw, 1.18rem);
 }
 
 #bank-spread .card {
   position: relative;
+  box-shadow: none;
 }
 
 #bank-spread .card::before {
