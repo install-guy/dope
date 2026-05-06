@@ -758,14 +758,21 @@ h2 {
   font-size: var(--font-size-100);
 }
 
-#today-word {
+#today-word,
+#final-vote {
   padding-top: 0;
   padding-bottom: clamp(var(--space-5), 4vw, var(--space-6));
   background: linear-gradient(180deg, #f9fbff 0%, #ffffff 100%);
 }
 
-#today-word .section-stack {
+#today-word .section-stack,
+#final-vote .section-stack {
   align-items: start;
+}
+
+#final-vote {
+  padding-top: clamp(var(--space-5), 5vw, var(--space-7));
+  background: var(--color-surface);
 }
 
 .vote-card {
