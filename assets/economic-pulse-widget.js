@@ -56,6 +56,7 @@
           <span class="economic-pulse-widget__badge" aria-hidden="true">${escapeHtml(badge)}</span>
         </div>
         <p class="economic-pulse-widget__value">${escapeHtml(indicator.displayValue)}</p>
+        ${renderIndicatorVisual(indicator)}
         <p class="economic-pulse-widget__note">${escapeHtml(indicator.ok === false ? "Signal unavailable right now" : indicator.note)}</p>
         ${indicator.date ? `
           <p class="economic-pulse-widget__date">
@@ -66,6 +67,48 @@
         <a class="economic-pulse-widget__link" href="${escapeHtml(indicator.sourceUrl)}" target="_blank" rel="noopener noreferrer">FRED receipt</a>
       </article>
     `;
+  }
+
+  function renderIndicatorVisual(indicator) {
+    if (indicator.ok === false || !Number.isFinite(indicator.value)) {
+      return "";
+    }
+
+    if (indicator.key === "inflation") {
+      const basketValue = Math.round(indicator.value);
+
+      return `
+        <div class="economic-pulse-widget__basket" aria-label="CPI translated to a household basket">
+          <span>
+            <strong>$100</strong>
+            <small>1982-84 basket</small>
+          </span>
+          <span class="economic-pulse-widget__arrow" aria-hidden="true">-&gt;</span>
+          <span>
+            <strong>$${escapeHtml(basketValue)}</strong>
+            <small>same basket now</small>
+          </span>
+        </div>
+      `;
+    }
+
+    if (indicator.key === "sentiment") {
+      const moodValue = Math.max(0, Math.min(100, indicator.value));
+
+      return `
+        <div class="economic-pulse-widget__meter" aria-label="Consumer mood compared with the 100-point baseline">
+          <div class="economic-pulse-widget__meter-track">
+            <span style="width: ${escapeHtml(moodValue.toFixed(1))}%"></span>
+          </div>
+          <div class="economic-pulse-widget__meter-labels">
+            <span>sour</span>
+            <strong>${escapeHtml(indicator.value.toFixed(1))} vs. 100 baseline</strong>
+          </div>
+        </div>
+      `;
+    }
+
+    return "";
   }
 
   function getBadge(key) {
