@@ -8,8 +8,8 @@ export async function onRequestGet() {
       fetchAaaText(AAA_NH_URL)
     ]);
 
-    const national = parseAverage(nationalText, /Today's AAA National Average\s+\$?(\d+\.\d{3})\s+Price as of\s+([0-9/]+)/i);
-    const newHampshire = parseAverage(newHampshireText, /Today's AAA New Hampshire Avg\.\s+\$?(\d+\.\d{3})\s+Price as of\s+([0-9/]+)/i);
+    const national = parseAverage(nationalText, /Today['’]s AAA National Average\s+\$?(\d+\.\d{3,4})\s+Price as of\s+([0-9/]+)/i);
+    const newHampshire = parseAverage(newHampshireText, /Today['’]s AAA New Hampshire Avg\.\s+\$?(\d+\.\d{3,4})\s+Price as of\s+([0-9/]+)/i);
     const nationalYesterday = parseRowAverage(nationalText, "Yesterday Avg.");
     const newHampshireYesterday = parseRowAverage(newHampshireText, "Yesterday Avg.");
 
@@ -98,7 +98,7 @@ function parseAverage(text, pattern) {
 
 function parseRowAverage(text, rowLabel) {
   const escapedLabel = rowLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const match = text.match(new RegExp(`${escapedLabel}\\s+\\$?(\\d+\\.\\d{3})`, "i"));
+  const match = text.match(new RegExp(`${escapedLabel}\\s+\\$?(\\d+\\.\\d{3,4})`, "i"));
   return match ? `$${match[1]}` : null;
 }
 

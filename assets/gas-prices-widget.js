@@ -111,7 +111,7 @@
     return {
       amount: `$${Math.abs(difference).toFixed(2)}`,
       direction: difference > 0 ? "up" : "down",
-      symbol: difference > 0 ? "▲" : "▼",
+      symbol: difference > 0 ? "\u25B2" : "\u25BC",
       label: `${difference > 0 ? "Up" : "Down"} $${Math.abs(difference).toFixed(2)} from yesterday`
     };
   }
