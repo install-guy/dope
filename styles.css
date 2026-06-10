@@ -550,7 +550,6 @@ h2 {
   color: var(--color-primary-dark);
   font-size: var(--font-size-100);
   font-weight: 900;
-  text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
