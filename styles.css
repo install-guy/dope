@@ -564,6 +564,14 @@ h2 {
   padding-block: clamp(var(--space-5), 5vw, var(--space-7));
 }
 
+#today-word {
+  padding-bottom: clamp(var(--space-4), 3vw, var(--space-5));
+}
+
+#today-sentence {
+  padding-top: clamp(var(--space-4), 3vw, var(--space-5));
+}
+
 .tag-acronym {
   color: #facc15;
   font-weight: 900;
@@ -774,8 +782,6 @@ h2 {
   margin-top: 0;
   max-width: 56rem;
   text-align: left;
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--color-border);
 }
 
 .today-summary p {
