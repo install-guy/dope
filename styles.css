@@ -484,13 +484,13 @@ h2 {
 }
 
 #why-it-matters {
-  padding-bottom: var(--space-3);
+  padding-block: clamp(var(--space-4), 3vw, var(--space-5));
 }
 
 .author-quote {
   max-width: 56rem;
   margin: 0;
-  padding: clamp(var(--space-4), 4vw, var(--space-5));
+  padding: clamp(var(--space-4), 3vw, var(--space-5));
   border: 1px solid rgba(124, 58, 237, 0.2);
   border-left: 0.35rem solid var(--color-secondary);
   border-radius: var(--radius-md);
@@ -505,7 +505,7 @@ h2 {
 .author-quote p {
   margin: 0;
   color: var(--color-text);
-  font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
   font-style: italic;
   font-weight: 400;
   line-height: 1.35;
