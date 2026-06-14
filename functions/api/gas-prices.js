@@ -1,19 +1,32 @@
 const AAA_NATIONAL_URL = "https://gasprices.aaa.com/";
 const AAA_NH_URL = "https://gasprices.aaa.com/?state=NH";
+const AAA_ME_URL = "https://gasprices.aaa.com/?state=ME";
 
 export async function onRequestGet() {
   try {
-    const [nationalText, newHampshireText] = await Promise.all([
+    const [nationalText, newHampshireText, maineText] = await Promise.all([
       fetchAaaText(AAA_NATIONAL_URL),
-      fetchAaaText(AAA_NH_URL)
+      fetchAaaText(AAA_NH_URL),
+      fetchAaaText(AAA_ME_URL)
     ]);
 
-    const national = parseAverage(nationalText, /Today['’]s AAA National Average\s+\$?(\d+\.\d{3,4})\s+Price as of\s+([0-9/]+)/i);
-    const newHampshire = parseAverage(newHampshireText, /Today['’]s AAA New Hampshire Avg\.\s+\$?(\d+\.\d{3,4})\s+Price as of\s+([0-9/]+)/i);
+    const national = parseAverage(
+      nationalText,
+      /Today['’]s AAA National Average\s+\$?(\d+\.\d{3,4})\s+Price as of\s+([0-9/]+)/i
+    );
+    const newHampshire = parseAverage(
+      newHampshireText,
+      /Today['’]s AAA New Hampshire Avg\.\s+\$?(\d+\.\d{3,4})\s+Price as of\s+([0-9/]+)/i
+    );
+    const maine = parseAverage(
+      maineText,
+      /Today['’]s AAA Maine Avg\.\s+\$?(\d+\.\d{3,4})\s+Price as of\s+([0-9/]+)/i
+    );
     const nationalYesterday = parseRowAverage(nationalText, "Yesterday Avg.");
     const newHampshireYesterday = parseRowAverage(newHampshireText, "Yesterday Avg.");
+    const maineYesterday = parseRowAverage(maineText, "Yesterday Avg.");
 
-    if (!national || !newHampshire || !nationalYesterday || !newHampshireYesterday) {
+    if (!national || !newHampshire || !maine || !nationalYesterday || !newHampshireYesterday || !maineYesterday) {
       return json(
         {
           ok: false,
@@ -28,7 +41,8 @@ export async function onRequestGet() {
       source: AAA_NH_URL,
       sources: {
         national: AAA_NATIONAL_URL,
-        newHampshire: AAA_NH_URL
+        newHampshire: AAA_NH_URL,
+        maine: AAA_ME_URL
       },
       fetchedAt: new Date().toISOString(),
       prices: {
@@ -43,6 +57,12 @@ export async function onRequestGet() {
           regular: newHampshire.price,
           yesterdayRegular: newHampshireYesterday,
           priceDate: newHampshire.date
+        },
+        maine: {
+          label: "Maine average",
+          regular: maine.price,
+          yesterdayRegular: maineYesterday,
+          priceDate: maine.date
         }
       }
     });

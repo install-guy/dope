@@ -33,8 +33,9 @@
   function renderPrices(node, data) {
     const national = data.prices?.national;
     const nh = data.prices?.newHampshire;
+    const maine = data.prices?.maine;
     const source = data.source || "https://gasprices.aaa.com/?state=NH";
-    const date = nh?.priceDate || national?.priceDate || "";
+    const date = nh?.priceDate || maine?.priceDate || national?.priceDate || "";
 
     node.innerHTML = `
       <div class="aaa-gas-widget">
@@ -42,6 +43,7 @@
         <div class="aaa-gas-widget__grid">
           ${renderPriceCard(national, "USA")}
           ${renderPriceCard(nh, "NH")}
+          ${renderPriceCard(maine, "ME")}
         </div>
         <p class="aaa-gas-widget__source">
           ${date ? `Price as of ${escapeHtml(date)}. ` : ""}
