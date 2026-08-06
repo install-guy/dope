@@ -1,8 +1,8 @@
 const AAA_NATIONAL_URL = "https://gasprices.aaa.com/";
 const AAA_NH_URL = "https://gasprices.aaa.com/?state=NH";
 const AAA_ME_URL = "https://gasprices.aaa.com/?state=ME";
-const FRED_WTI_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILWTICO";
-const FRED_WTI_SOURCE_URL = "https://fred.stlouisfed.org/series/DCOILWTICO";
+const WTI_QUOTE_URL = "https://query1.finance.yahoo.com/v8/finance/chart/CL=F?interval=1d&range=5d";
+const WTI_SOURCE_URL = "https://finance.yahoo.com/quote/CL=F";
 
 export async function onRequestGet() {
   try {
@@ -11,14 +11,7 @@ export async function onRequestGet() {
       fetchAaaText(AAA_NH_URL),
       fetchAaaText(AAA_ME_URL)
     ]);
-    let crudeOil = null;
-    let crudeOilError = null;
-
-    try {
-      crudeOil = await fetchWtiPrice();
-    } catch (error) {
-      crudeOilError = error instanceof Error ? error.message : "WTI price request failed";
-    }
+    const crudeOil = await fetchWtiPrice().catch(() => null);
 
     const national = parseAverage(
       nationalText,
@@ -53,11 +46,10 @@ export async function onRequestGet() {
         national: AAA_NATIONAL_URL,
         newHampshire: AAA_NH_URL,
         maine: AAA_ME_URL,
-        crudeOil: FRED_WTI_SOURCE_URL
+      crudeOil: WTI_SOURCE_URL
       },
       fetchedAt: new Date().toISOString(),
       crudeOil,
-      ...(crudeOilError ? { crudeOilError } : {}),
       prices: {
         national: {
           label: "National average",
@@ -107,48 +99,38 @@ async function fetchAaaText(url) {
 }
 
 async function fetchWtiPrice() {
-  // FRED serves this public CSV directly.  Do not send a synthetic User-Agent:
-  // its bot protection rejects that header from some Cloudflare edge locations.
-  const response = await fetch(FRED_WTI_URL, {
+  const response = await fetch(WTI_QUOTE_URL, {
     headers: {
-      Accept: "text/csv,*/*"
+      Accept: "application/json"
     }
   });
 
   if (!response.ok) {
-    throw new Error(`FRED WTI request failed with status ${response.status}`);
+    throw new Error(`WTI quote request failed with status ${response.status}`);
   }
 
-  const csv = await response.text();
-  const rows = csv.trim().split(/\r?\n/).slice(1).reverse();
-  const observations = [];
+  const payload = await response.json();
+  const quote = payload?.chart?.result?.[0];
+  const current = quote?.meta?.regularMarketPrice;
+  const previous = quote?.meta?.chartPreviousClose;
 
-  for (const row of rows) {
-    const [date, rawValue] = row.split(",");
-    const value = Number.parseFloat(rawValue);
-
-    if (date && Number.isFinite(value)) {
-      observations.push({ date, value });
-
-      if (observations.length === 2) {
-        break;
-      }
-    }
+  if (!Number.isFinite(current) || !Number.isFinite(previous)) {
+    throw new Error("Unable to parse WTI quote data");
   }
 
-  if (observations.length < 2) {
-    throw new Error("Unable to parse recent WTI observations");
-  }
+  const timestamp = quote?.meta?.regularMarketTime;
+  const priceDate = Number.isFinite(timestamp)
+    ? new Date(timestamp * 1000).toISOString().slice(0, 10)
+    : "";
 
   return {
     label: "WTI crude oil",
-    regular: `$${observations[0].value.toFixed(2)}`,
-    previousRegular: `$${observations[1].value.toFixed(2)}`,
-    priceDate: observations[0].date,
-    previousDate: observations[1].date,
+    regular: `$${current.toFixed(2)}`,
+    previousRegular: `$${previous.toFixed(2)}`,
+    priceDate,
     unit: "per barrel",
-    source: "FRED / U.S. EIA",
-    sourceUrl: FRED_WTI_SOURCE_URL
+    source: "Yahoo Finance / NYMEX",
+    sourceUrl: WTI_SOURCE_URL
   };
 }
 
