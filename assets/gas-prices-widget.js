@@ -34,11 +34,13 @@
     const national = data.prices?.national;
     const nh = data.prices?.newHampshire;
     const maine = data.prices?.maine;
+    const crudeOil = data.crudeOil;
     const source = data.source || "https://gasprices.aaa.com/?state=NH";
     const date = nh?.priceDate || maine?.priceDate || national?.priceDate || "";
 
     node.innerHTML = `
       <div class="aaa-gas-widget">
+        ${renderCrudeCard(crudeOil)}
         <p class="aaa-gas-widget__title">AAA gas averages: today vs. yesterday</p>
         <div class="aaa-gas-widget__grid">
           ${renderPriceCard(national, "USA")}
@@ -49,6 +51,37 @@
           ${date ? `Price as of ${escapeHtml(date)}. ` : ""}
           Source: <a href="${escapeHtml(source)}" target="_blank" rel="noopener noreferrer">AAA Fuel Prices</a>
         </p>
+      </div>
+    `;
+  }
+
+  function renderCrudeCard(price) {
+    if (!price) {
+      return "";
+    }
+
+    const delta = getPriceDelta(price.regular, price.previousRegular);
+    const sourceUrl = price.sourceUrl || "https://fred.stlouisfed.org/series/DCOILWTICO";
+    const comparisonLabel = price.previousDate ? `Previous (${price.previousDate})` : "Previous reading";
+
+    return `
+      <div class="aaa-gas-widget__price">
+        <div class="aaa-gas-widget__heading">
+          <p class="aaa-gas-widget__label">${escapeHtml(price.label || "WTI crude oil")}</p>
+          <span class="aaa-gas-widget__badge" aria-hidden="true">WTI</span>
+        </div>
+        <p class="aaa-gas-widget__value">
+          ${escapeHtml(formatPrice(price.regular))}
+          ${delta ? `
+            <span class="aaa-gas-widget__delta aaa-gas-widget__delta--${delta.direction}" title="${escapeHtml(delta.label)}">
+              <span aria-hidden="true">${delta.symbol}</span>
+              <span class="visually-hidden">${escapeHtml(delta.label)}</span>
+            </span>
+          ` : ""}
+        </p>
+        <p class="aaa-gas-widget__date">${price.priceDate ? `${escapeHtml(price.priceDate)}, ` : ""}${escapeHtml(price.unit || "per barrel")}</p>
+        ${price.previousRegular ? `<p class="aaa-gas-widget__compare">${escapeHtml(comparisonLabel)}: <strong>${escapeHtml(formatPrice(price.previousRegular))}</strong></p>` : ""}
+        <p class="aaa-gas-widget__source">Source: <a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(price.source || "FRED / U.S. EIA")}</a></p>
       </div>
     `;
   }
@@ -106,7 +139,7 @@
         amount: "$0.00",
         direction: "flat",
         symbol: "-",
-        label: "Unchanged from yesterday"
+        label: "Unchanged from previous reading"
       };
     }
 
@@ -114,7 +147,7 @@
       amount: `$${Math.abs(difference).toFixed(2)}`,
       direction: difference > 0 ? "up" : "down",
       symbol: difference > 0 ? "\u25B2" : "\u25BC",
-      label: `${difference > 0 ? "Up" : "Down"} $${Math.abs(difference).toFixed(2)} from yesterday`
+      label: `${difference > 0 ? "Up" : "Down"} $${Math.abs(difference).toFixed(2)} from previous reading`
     };
   }
 
