@@ -99,10 +99,11 @@ async function fetchAaaText(url) {
 }
 
 async function fetchWtiPrice() {
+  // FRED serves this public CSV directly. Do not send a synthetic User-Agent:
+  // its bot protection rejects that header from some Cloudflare edge locations.
   const response = await fetch(FRED_WTI_URL, {
     headers: {
-      "User-Agent": "dopeoclock.com WTI price reader",
-      "Accept": "text/csv,*/*"
+      Accept: "text/csv,*/*"
     }
   });
 
