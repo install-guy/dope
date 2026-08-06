@@ -1,13 +1,16 @@
 const AAA_NATIONAL_URL = "https://gasprices.aaa.com/";
 const AAA_NH_URL = "https://gasprices.aaa.com/?state=NH";
 const AAA_ME_URL = "https://gasprices.aaa.com/?state=ME";
+const FRED_WTI_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILWTICO";
+const FRED_WTI_SOURCE_URL = "https://fred.stlouisfed.org/series/DCOILWTICO";
 
 export async function onRequestGet() {
   try {
-    const [nationalText, newHampshireText, maineText] = await Promise.all([
+    const [nationalText, newHampshireText, maineText, crudeOil] = await Promise.all([
       fetchAaaText(AAA_NATIONAL_URL),
       fetchAaaText(AAA_NH_URL),
-      fetchAaaText(AAA_ME_URL)
+      fetchAaaText(AAA_ME_URL),
+      fetchWtiPrice().catch(() => null)
     ]);
 
     const national = parseAverage(
@@ -42,9 +45,11 @@ export async function onRequestGet() {
       sources: {
         national: AAA_NATIONAL_URL,
         newHampshire: AAA_NH_URL,
-        maine: AAA_ME_URL
+        maine: AAA_ME_URL,
+        crudeOil: FRED_WTI_SOURCE_URL
       },
       fetchedAt: new Date().toISOString(),
+      crudeOil,
       prices: {
         national: {
           label: "National average",
@@ -91,6 +96,51 @@ async function fetchAaaText(url) {
 
   const html = await response.text();
   return normalizeText(stripTags(decodeHtmlEntities(html)));
+}
+
+async function fetchWtiPrice() {
+  const response = await fetch(FRED_WTI_URL, {
+    headers: {
+      "User-Agent": "dopeoclock.com WTI price reader",
+      "Accept": "text/csv,*/*"
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`FRED WTI request failed with status ${response.status}`);
+  }
+
+  const csv = await response.text();
+  const rows = csv.trim().split(/\r?\n/).slice(1).reverse();
+  const observations = [];
+
+  for (const row of rows) {
+    const [date, rawValue] = row.split(",");
+    const value = Number.parseFloat(rawValue);
+
+    if (date && Number.isFinite(value)) {
+      observations.push({ date, value });
+
+      if (observations.length === 2) {
+        break;
+      }
+    }
+  }
+
+  if (observations.length < 2) {
+    throw new Error("Unable to parse recent WTI observations");
+  }
+
+  return {
+    label: "WTI crude oil",
+    regular: `$${observations[0].value.toFixed(2)}`,
+    previousRegular: `$${observations[1].value.toFixed(2)}`,
+    priceDate: observations[0].date,
+    previousDate: observations[1].date,
+    unit: "per barrel",
+    source: "FRED / U.S. EIA",
+    sourceUrl: FRED_WTI_SOURCE_URL
+  };
 }
 
 function json(data, status = 200) {
