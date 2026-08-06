@@ -6,12 +6,19 @@ const FRED_WTI_SOURCE_URL = "https://fred.stlouisfed.org/series/DCOILWTICO";
 
 export async function onRequestGet() {
   try {
-    const [nationalText, newHampshireText, maineText, crudeOil] = await Promise.all([
+    const [nationalText, newHampshireText, maineText] = await Promise.all([
       fetchAaaText(AAA_NATIONAL_URL),
       fetchAaaText(AAA_NH_URL),
-      fetchAaaText(AAA_ME_URL),
-      fetchWtiPrice().catch(() => null)
+      fetchAaaText(AAA_ME_URL)
     ]);
+    let crudeOil = null;
+    let crudeOilError = null;
+
+    try {
+      crudeOil = await fetchWtiPrice();
+    } catch (error) {
+      crudeOilError = error instanceof Error ? error.message : "WTI price request failed";
+    }
 
     const national = parseAverage(
       nationalText,
@@ -50,6 +57,7 @@ export async function onRequestGet() {
       },
       fetchedAt: new Date().toISOString(),
       crudeOil,
+      ...(crudeOilError ? { crudeOilError } : {}),
       prices: {
         national: {
           label: "National average",
@@ -99,7 +107,7 @@ async function fetchAaaText(url) {
 }
 
 async function fetchWtiPrice() {
-  // FRED serves this public CSV directly. Do not send a synthetic User-Agent:
+  // FRED serves this public CSV directly.  Do not send a synthetic User-Agent:
   // its bot protection rejects that header from some Cloudflare edge locations.
   const response = await fetch(FRED_WTI_URL, {
     headers: {
