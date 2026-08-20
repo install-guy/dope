@@ -29,30 +29,44 @@
         <section class="debt-translation" aria-labelledby="${translationTitleId}">
           <div class="debt-translation__heading">
             <h3 id="${translationTitleId}">If This Were Family Debt</h3>
-            <p>A family bringing home $100,000 would spend about $134,000, finance the $34,000 gap, and keep paying interest on the balance it already carries.</p>
+            <p>Before this family earns or spends another dollar, it already owes about:</p>
           </div>
 
-          <div class="debt-family__comparison" aria-label="Federal finances scaled to a family income of $100,000">
+          <div class="debt-family__burden" aria-label="Existing family debt and annual interest at the federal government's scale">
+            <div class="debt-family__balance">
+              <span>Existing family debt</span>
+              <strong>≈ $765,000</strong>
+            </div>
+            <div class="debt-family__interest">
+              <span>Interest alone</span>
+              <strong>≈ $19,600/year</strong>
+              <small>About $1,635 every month—nearly 20% of income before the debt comes down by a dollar.</small>
+            </div>
+          </div>
+
+          <h4 class="debt-family__year-title">Then the year begins.</h4>
+
+          <div class="debt-family__flow" aria-label="Annual federal finances scaled to a family income of $100,000">
             <div class="debt-family__amount">
-              <span>Family income</span>
+              <span>Income</span>
               <strong>$100,000</strong>
             </div>
             <div class="debt-family__amount debt-family__amount--spending">
-              <span>Family spending</span>
+              <span>Spending</span>
               <strong>≈ $134,000</strong>
             </div>
-            <div class="debt-family__amount debt-family__amount--debt">
-              <span>Family debt carried</span>
-              <strong>≈ $765,000</strong>
-            </div>
-            <div class="debt-family__amount debt-family__amount--interest">
-              <span>Interest due</span>
-              <strong>≈ $19,600/year</strong>
-              <small>About $1,635 every month</small>
+            <div class="debt-family__amount debt-family__amount--borrowing">
+              <span>New debt</span>
+              <strong>+ $34,000</strong>
             </div>
           </div>
 
-          <p class="debt-family__takeaway">That is like financing another <strong>≈ $34,000 purchase every year</strong> while interest keeps coming due on the family debt already on the books.</p>
+          <div class="debt-family__takeaway">
+            <strong>This is not a payoff plan.</strong>
+            <span>Pay the interest. Refinance the balance. Borrow again.</span>
+          </div>
+
+          <p class="debt-family__closer">At household scale, no financial adviser would call that a path out of debt. At the federal level, it is the current path.</p>
         </section>
       </div>
     `;

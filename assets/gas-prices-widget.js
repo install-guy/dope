@@ -36,12 +36,14 @@
     const maine = data.prices?.maine;
     const crudeOil = data.crudeOil;
     const source = data.source || "https://gasprices.aaa.com/?state=NH";
+    const crudeSourceUrl = crudeOil?.sourceUrl || "https://fred.stlouisfed.org/series/DCOILWTICO";
+    const crudeSourceLabel = crudeOil?.source || "FRED / U.S. EIA";
     const date = nh?.priceDate || maine?.priceDate || national?.priceDate || "";
 
     node.innerHTML = `
       <div class="aaa-gas-widget">
         ${renderCrudeCard(crudeOil)}
-        <p class="aaa-gas-widget__title">AAA gas averages: today vs. yesterday</p>
+        <p class="aaa-gas-widget__title">Gas averages: today vs. yesterday</p>
         <div class="aaa-gas-widget__grid">
           ${renderPriceCard(national, "USA")}
           ${renderPriceCard(nh, "NH")}
@@ -49,7 +51,7 @@
         </div>
         <p class="aaa-gas-widget__source">
           ${date ? `Price as of ${escapeHtml(date)}. ` : ""}
-          Source: <a href="${escapeHtml(source)}" target="_blank" rel="noopener noreferrer">AAA Fuel Prices</a>
+          Sources: <a href="${escapeHtml(source)}" target="_blank" rel="noopener noreferrer">AAA Fuel Prices</a>${crudeOil ? ` · <a href="${escapeHtml(crudeSourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(crudeSourceLabel)}</a>` : ""}
         </p>
       </div>
     `;
@@ -61,7 +63,6 @@
     }
 
     const delta = getPriceDelta(price.regular, price.previousRegular);
-    const sourceUrl = price.sourceUrl || "https://fred.stlouisfed.org/series/DCOILWTICO";
     const comparisonLabel = price.previousDate ? `Previous (${price.previousDate})` : "Previous reading";
 
     return `
@@ -81,7 +82,6 @@
         </p>
         <p class="aaa-gas-widget__date">${price.priceDate ? `${escapeHtml(price.priceDate)}, ` : ""}${escapeHtml(price.unit || "per barrel")}</p>
         ${price.previousRegular ? `<p class="aaa-gas-widget__compare">${escapeHtml(comparisonLabel)}: <strong>${escapeHtml(formatPrice(price.previousRegular))}</strong></p>` : ""}
-        <p class="aaa-gas-widget__source">Source: <a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(price.source || "FRED / U.S. EIA")}</a></p>
       </div>
     `;
   }

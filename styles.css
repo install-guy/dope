@@ -828,18 +828,13 @@ h2 {
   font-size: var(--font-size-100);
 }
 
-#today-word,
-#final-vote {
+#today-word {
   background: linear-gradient(180deg, #f9fbff 0%, #ffffff 100%);
 }
 
 #today-word .section-stack,
 #final-vote .section-stack {
   align-items: start;
-}
-
-#final-vote {
-  background: var(--color-surface);
 }
 
 .vote-card {
@@ -938,10 +933,6 @@ h2 {
   background: #ea580c;
   color: #fff;
   transform: translateY(-1px);
-}
-
-#gas-prices {
-  background: var(--color-surface-alt);
 }
 
 #gas-prices .section-stack {
@@ -1199,11 +1190,89 @@ h2 {
   color: var(--color-text-muted);
 }
 
-.debt-family__comparison {
+.debt-family__burden {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: clamp(0.6rem, 2vw, 1.1rem);
   margin-top: clamp(1.25rem, 3vw, 2rem);
+}
+
+.debt-family__balance,
+.debt-family__interest {
+  min-width: 0;
+  padding: clamp(1.1rem, 3vw, 1.6rem);
+  border-radius: var(--radius-sm);
+}
+
+.debt-family__balance {
+  border: 1px solid var(--color-primary-dark);
+  background: var(--color-primary-dark);
+  color: #fff;
+}
+
+.debt-family__interest {
+  border: 1px solid #fecaca;
+  background: #fff;
+}
+
+.debt-family__balance span,
+.debt-family__interest span,
+.debt-family__amount span {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.debt-family__balance span {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.debt-family__interest span,
+.debt-family__amount span {
+  color: var(--color-text-muted);
+}
+
+.debt-family__balance strong,
+.debt-family__interest strong,
+.debt-family__amount strong {
+  display: block;
+  font-variant-numeric: tabular-nums;
+}
+
+.debt-family__balance strong {
+  color: #fff;
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  line-height: 1.05;
+}
+
+.debt-family__interest strong {
+  color: #b91c1c;
+  font-size: clamp(1.4rem, 3.6vw, 2rem);
+}
+
+.debt-family__interest small {
+  display: block;
+  margin-top: 0.45rem;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.debt-family__year-title {
+  margin: clamp(1.4rem, 3vw, 2rem) 0 0;
+  color: var(--color-text);
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  font-weight: 900;
+}
+
+.debt-family__flow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.6rem, 2vw, 1.1rem);
+  margin-top: var(--space-2);
 }
 
 .debt-family__amount {
@@ -1213,49 +1282,45 @@ h2 {
   background: #fff;
 }
 
-.debt-family__amount span {
-  display: block;
-  margin-bottom: 0.2rem;
-  color: var(--color-text-muted);
-  font-size: 0.76rem;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
 .debt-family__amount strong {
-  display: block;
   color: var(--color-primary-dark);
   font-size: clamp(1.2rem, 3vw, 1.75rem);
-  font-variant-numeric: tabular-nums;
 }
 
 .debt-family__amount--spending strong,
-.debt-family__amount--debt strong,
-.debt-family__amount--interest strong {
+.debt-family__amount--borrowing strong {
   color: #b91c1c;
-}
-
-.debt-family__amount small {
-  display: block;
-  margin-top: 0.35rem;
-  color: var(--color-text-muted);
-  font-size: 0.78rem;
-  font-weight: 700;
 }
 
 .debt-family__takeaway {
-  margin: var(--space-4) 0 0;
-  color: var(--color-text) !important;
-  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  display: grid;
+  gap: 0.25rem;
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--color-dark);
+  color: #fff;
 }
 
 .debt-family__takeaway strong {
-  color: #b91c1c;
-  font-size: 1.08em;
+  color: #fff;
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+}
+
+.debt-family__takeaway span {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.debt-family__closer {
+  max-width: 45rem;
+  margin: var(--space-3) 0 0;
+  color: var(--color-text) !important;
+  font-weight: 700;
 }
 
 @media (max-width: 42rem) {
-  .debt-family__comparison {
+  .debt-family__burden,
+  .debt-family__flow {
     grid-template-columns: 1fr;
   }
 
