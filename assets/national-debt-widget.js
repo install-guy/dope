@@ -26,18 +26,22 @@
     }).format(amount);
   }
 
-  function renderShell(node, debt, officialDate, dailyChange) {
+  function renderShell(node, debt, officialDate, dailyChange, isLive) {
+    const counterLabel = isLive ? "Estimated national debt now" : "$40 trillion reference scale";
+    const pace = isLive
+      ? `Recent pace: <strong>${dailyChange >= 0 ? "+" : "−"}${dollars.format(Math.abs(dailyChange))} per day</strong>`
+      : "Treasury's live update is temporarily unavailable.";
+    const counterNote = isLive
+      ? `The counter estimates movement between Treasury updates using the latest daily change. Last official reading: ${formatDate(officialDate)}.`
+      : "The family comparison remains available using the $40 trillion reference figure. This number is not being presented as a live reading.";
+
     node.innerHTML = `
       <div class="debt-widget">
         <div class="debt-counter-card">
-          <p class="debt-counter-card__label"><span aria-hidden="true"></span> Estimated national debt now</p>
+          <p class="debt-counter-card__label"><span aria-hidden="true"></span> ${counterLabel}</p>
           <p class="debt-counter-card__number" data-debt-counter>${debtValue(debt)}</p>
-          <p class="debt-counter-card__pace">
-            Recent pace: <strong>${dailyChange >= 0 ? "+" : "−"}${dollars.format(Math.abs(dailyChange))} per day</strong>
-          </p>
-          <p class="debt-counter-card__note">
-            The counter estimates movement between Treasury updates using the latest daily change. Last official reading: ${formatDate(officialDate)}.
-          </p>
+          <p class="debt-counter-card__pace">${pace}</p>
+          <p class="debt-counter-card__note">${counterNote}</p>
         </div>
 
         <div class="debt-family">
@@ -74,7 +78,7 @@
       </div>
     `;
 
-    animateCounter(node.querySelector("[data-debt-counter]"), debt, dailyChange);
+    if (isLive) animateCounter(node.querySelector("[data-debt-counter]"), debt, dailyChange);
   }
 
   function metric(label, value, source, wide) {
@@ -113,14 +117,16 @@
       if (!response.ok) throw new Error("Debt endpoint failed");
       const data = await response.json();
       if (!data.latest || !Number.isFinite(data.latest.value)) throw new Error("Debt data unavailable");
-      renderShell(node, data.latest.value, data.latest.recordDate, Number(data.dailyChange) || 0);
+      renderShell(
+        node,
+        data.latest.value,
+        data.latest.recordDate,
+        Number(data.dailyChange) || 0,
+        data.ok === true
+      );
     } catch (error) {
       console.error(error);
-      node.innerHTML = `
-        <div class="debt-widget debt-widget--error" role="status">
-          <strong>The live counter missed an update.</strong>
-          <p>The Treasury receipt is still available at <a href="https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/debt-to-the-penny" target="_blank" rel="noopener noreferrer">Debt to the Penny</a>.</p>
-        </div>`;
+      renderShell(node, 40e12, "", 0, false);
     }
   }
 

@@ -1,5 +1,6 @@
 const DEBT_ENDPOINT =
   "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny?sort=-record_date&page%5Bsize%5D=2";
+const REFERENCE_DEBT = 40e12;
 
 export async function onRequestGet() {
   try {
@@ -38,10 +39,18 @@ export async function onRequestGet() {
       dailyChange
     });
   } catch (error) {
-    return json(
-      { ok: false, error: error instanceof Error ? error.message : "Debt data unavailable" },
-      502
-    );
+    // Keep the scale comparison usable when Treasury is temporarily unavailable.
+    // This is deliberately identified as a reference figure, never as live data.
+    return json({
+      ok: false,
+      source: "U.S. Treasury Fiscal Data",
+      sourceUrl: "https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/debt-to-the-penny",
+      fetchedAt: new Date().toISOString(),
+      latest: { recordDate: "", value: REFERENCE_DEBT },
+      previous: null,
+      dailyChange: 0,
+      error: error instanceof Error ? error.message : "Debt data unavailable"
+    });
   }
 }
 
