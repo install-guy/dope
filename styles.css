@@ -486,7 +486,6 @@ h2 {
 .section-title-accent,
 .today-summary h2,
 .gas-price-intro h2,
-.cost-pulse-intro h2,
 .debt-intro h2,
 #bank-spread-title,
 #updates-title {
@@ -502,7 +501,6 @@ h2 {
 .section-title-accent::after,
 .today-summary h2::after,
 .gas-price-intro h2::after,
-.cost-pulse-intro h2::after,
 .debt-intro h2::after,
 #bank-spread-title::after,
 #updates-title::after {
@@ -553,7 +551,6 @@ h2 {
 #today-word,
 #today-sentence,
 #gas-prices,
-#cost-pulse,
 #national-debt,
 #bank-spread,
 #updates,
@@ -1110,67 +1107,211 @@ h2 {
   color: var(--color-primary);
 }
 
-#cost-pulse {
-  background: var(--color-surface);
-}
-
-#cost-pulse + #updates {
-  background: var(--color-surface-alt);
-}
-
-#cost-pulse .section-stack {
-  gap: var(--space-4);
-  align-items: start;
-}
-
-#cost-pulse .cost-pulse-intro,
-#cost-pulse .economic-pulse-widget,
 #bank-spread .section-lead,
 .bank-spread-panel {
   max-width: 56rem;
 }
 
-.cost-pulse-intro p {
-  max-width: 44rem;
+/* National debt */
+#national-debt .section-stack {
+  align-items: start;
+  gap: var(--space-4);
+}
+
+.debt-intro,
+.debt-widget {
+  width: 100%;
+  max-width: 56rem;
+}
+
+.debt-intro > p:last-child {
+  max-width: 46rem;
   color: var(--color-text-muted);
 }
 
-/* National debt */
-#national-debt .section-stack { gap: var(--space-4); align-items: start; }
-.debt-intro, .debt-widget { width: 100%; max-width: 56rem; }
-.debt-intro > p:last-child { max-width: 46rem; color: var(--color-text-muted); }
-.debt-eyebrow { margin: 0 0 0.35rem; color: var(--color-secondary) !important; font-size: 0.76rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
-.debt-widget { display: grid; gap: var(--space-4); }
-.debt-family { padding: clamp(1.4rem, 4vw, 2.4rem); border: 1px solid rgba(124,58,237,.24); border-left: .42rem solid var(--color-secondary); border-radius: var(--radius-md); background: linear-gradient(145deg, #fff 0%, #f7f5ff 100%); box-shadow: var(--shadow-sm); }
-.debt-family__kicker { margin: 0 0 .4rem; color: var(--color-primary-dark) !important; font-size: .78rem; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
-.debt-family h3 { max-width: 48rem; margin: 0; color: var(--color-text); font-size: clamp(1.55rem, 4vw, 2.55rem); letter-spacing: -.025em; line-height: 1.12; }
-.debt-family__comparison { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: clamp(.6rem, 2vw, 1.1rem); margin-top: clamp(1.25rem, 3vw, 2rem); }
-.debt-family__amount { padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: #fff; }
-.debt-family__amount span { display: block; margin-bottom: .2rem; color: var(--color-text-muted); font-size: .76rem; font-weight: 800; text-transform: uppercase; }
-.debt-family__amount strong { color: var(--color-primary-dark); font-size: clamp(1.25rem, 3vw, 1.85rem); font-variant-numeric: tabular-nums; }
-.debt-family__amount--spending strong, .debt-family__amount--debt strong { color: #b91c1c; }
-.debt-family__operator { color: var(--color-secondary); font-size: 1.5rem; font-weight: 900; }
-.debt-family__owed { margin: var(--space-4) 0 0; color: var(--color-text) !important; font-size: clamp(1.05rem, 2.4vw, 1.35rem); }
-.debt-family__owed strong { color: #b91c1c; font-size: 1.15em; }
-.debt-family__note { margin: .35rem 0 0; color: var(--color-text-muted) !important; font-size: .78rem; }
-.debt-counter-card { overflow: hidden; padding: clamp(1rem, 3vw, 1.5rem); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #fff; box-shadow: var(--shadow-sm); }
-.debt-counter-card__heading { display: flex; align-items: end; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-3); }
-.debt-counter-card__heading h3 { margin: 0; color: var(--color-text); font-size: clamp(1.1rem, 2.5vw, 1.45rem); }
-.debt-counter-card__heading a { flex: 0 0 auto; color: var(--color-primary-dark); font-size: .78rem; font-weight: 800; text-decoration: underline; text-underline-offset: .15em; }
-.debt-counter-card__frame { display: block; width: 100%; min-height: 200px; border: 0; border-radius: var(--radius-sm); background: #17132a; transition: height .2s ease; }
-.debt-caveat { margin: 0; padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); background: #eeeaf8; color: var(--color-text-muted) !important; font-size: .84rem; line-height: 1.55; }
-.debt-caveat strong { color: var(--color-primary-dark); }
-.debt-sources { margin: 0; font-size: .76rem; line-height: 1.6; }
-.debt-sources a { color: var(--color-primary-dark); font-weight: 800; text-decoration: underline; text-underline-offset: .15em; }
+.debt-eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--color-secondary) !important;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.debt-widget {
+  display: grid;
+  gap: clamp(var(--space-4), 4vw, var(--space-6));
+}
+
+.debt-counter-card {
+  overflow: hidden;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid var(--color-border);
+  border-top: 0.35rem solid var(--color-secondary);
+  border-radius: var(--radius-md);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.debt-counter-card__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.debt-counter-card__heading h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(1.2rem, 2.8vw, 1.6rem);
+}
+
+.debt-counter-card__heading a {
+  flex: 0 0 auto;
+  color: var(--color-primary-dark);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.debt-counter-card__frame {
+  display: block;
+  width: 100%;
+  min-height: 200px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: #17132a;
+  transition: height 0.2s ease;
+}
+
+.debt-translation {
+  padding: clamp(1.4rem, 4vw, 2.4rem);
+  border: 1px solid rgba(124, 58, 237, 0.24);
+  border-left: 0.42rem solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, #fff 0%, #f7f5ff 100%);
+  box-shadow: var(--shadow-sm);
+}
+
+.debt-translation__heading {
+  max-width: 48rem;
+}
+
+.debt-translation__heading h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(1.55rem, 4vw, 2.55rem);
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+}
+
+.debt-translation__heading > p:last-child {
+  max-width: 43rem;
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.debt-family__comparison {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: clamp(0.6rem, 2vw, 1.1rem);
+  margin-top: clamp(1.25rem, 3vw, 2rem);
+}
+
+.debt-family__amount {
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+}
+
+.debt-family__amount span {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.debt-family__amount strong {
+  color: var(--color-primary-dark);
+  font-size: clamp(1.2rem, 3vw, 1.75rem);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.debt-family__amount--spending strong,
+.debt-family__amount--debt strong {
+  color: #b91c1c;
+}
+
+.debt-family__operator {
+  color: var(--color-secondary);
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.debt-family__takeaway {
+  margin: var(--space-4) 0 0;
+  color: var(--color-text) !important;
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+}
+
+.debt-family__takeaway strong {
+  color: #b91c1c;
+  font-size: 1.08em;
+}
+
+.debt-caveat {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: #eeeaf8;
+  color: var(--color-text-muted) !important;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.debt-caveat strong {
+  color: var(--color-primary-dark);
+}
+
+.debt-sources {
+  margin: calc(var(--space-4) * -0.5) 0 0;
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+.debt-sources a {
+  color: var(--color-primary-dark);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
 
 @media (max-width: 42rem) {
-  .debt-family__comparison { grid-template-columns: 1fr; }
-  .debt-family__operator { display: none; }
-  .debt-counter-card__heading { align-items: start; flex-direction: column; }
+  .debt-family__comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .debt-family__operator {
+    text-align: center;
+  }
+
+  .debt-counter-card__heading {
+    align-items: start;
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 27rem) {
-  .debt-family { border-left-width: .3rem; }
+  .debt-translation {
+    border-left-width: 0.3rem;
+  }
 }
 
 #bank-spread .section-lead {
@@ -1178,200 +1319,6 @@ h2 {
   color: var(--color-text-muted);
   font-size: 1rem;
   font-weight: 400;
-}
-
-.economic-pulse-widget {
-  display: grid;
-  gap: var(--space-3);
-  width: 100%;
-  padding: var(--space-4);
-  border: 1px solid rgba(124, 58, 237, 0.2);
-  border-radius: var(--radius-md);
-  background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
-  box-shadow: var(--shadow-sm);
-}
-
-.economic-pulse-widget__title {
-  margin: 0;
-  color: var(--color-primary-dark);
-  font-size: var(--font-size-100);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.economic-pulse-widget__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-3);
-}
-
-.economic-pulse-widget__card {
-  min-width: 0;
-  padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: #fff;
-}
-
-.economic-pulse-widget__heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-2);
-}
-
-.economic-pulse-widget__badge {
-  flex: 0 0 auto;
-  display: inline-grid;
-  place-items: center;
-  min-width: 2rem;
-  min-height: 1.25rem;
-  padding: 0.1rem 0.35rem;
-  border: 1px solid rgba(124, 58, 237, 0.22);
-  border-radius: 999px;
-  background: #f9fbff;
-  color: var(--color-primary-dark);
-  font-size: 0.68rem;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-}
-
-.economic-pulse-widget__label,
-.economic-pulse-widget__note,
-.economic-pulse-widget__date,
-.economic-pulse-widget__source {
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-100);
-}
-
-.economic-pulse-widget__label {
-  color: var(--color-text);
-  font-weight: 800;
-}
-
-.economic-pulse-widget__value {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-  margin: 0.3rem 0;
-  color: var(--color-text);
-  font-size: clamp(1.6rem, 3.4vw, 2.1rem);
-  font-weight: 900;
-  line-height: 1;
-}
-
-.economic-pulse-widget__delta {
-  display: inline-flex;
-  align-items: center;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  font-weight: 900;
-}
-
-.economic-pulse-widget__delta--bad {
-  color: #dc2626;
-}
-
-.economic-pulse-widget__delta--good {
-  color: #15803d;
-}
-
-.economic-pulse-widget__delta--flat {
-  color: var(--color-text-muted);
-}
-
-.economic-pulse-widget__basket {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: var(--space-2);
-  margin: var(--space-3) 0;
-  padding: var(--space-3);
-  border: 1px solid rgba(249, 115, 22, 0.22);
-  border-radius: var(--radius-sm);
-  background: #fff7ed;
-}
-
-.economic-pulse-widget__basket span:not(.economic-pulse-widget__arrow) {
-  display: grid;
-  gap: 0.1rem;
-}
-
-.economic-pulse-widget__basket strong {
-  color: var(--color-text);
-  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
-  line-height: 1;
-}
-
-.economic-pulse-widget__basket small {
-  color: var(--color-text-muted);
-  font-size: 0.72rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.economic-pulse-widget__arrow {
-  color: var(--color-secondary);
-  font-weight: 900;
-}
-
-.economic-pulse-widget__meter {
-  display: grid;
-  gap: var(--space-2);
-  margin: var(--space-3) 0;
-}
-
-.economic-pulse-widget__meter-track {
-  height: 0.75rem;
-  overflow: hidden;
-  border: 1px solid rgba(124, 58, 237, 0.2);
-  border-radius: 999px;
-  background: #eef2ff;
-}
-
-.economic-pulse-widget__meter-track span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--color-secondary), #facc15);
-}
-
-.economic-pulse-widget__meter-labels {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-2);
-  color: var(--color-text-muted);
-  font-size: 0.72rem;
-  line-height: 1.2;
-}
-
-.economic-pulse-widget__meter-labels strong {
-  color: var(--color-text);
-  text-align: right;
-}
-
-.economic-pulse-widget__date span {
-  display: block;
-  margin-top: 0.15rem;
-}
-
-.economic-pulse-widget__link,
-.economic-pulse-widget__source a {
-  display: inline-block;
-  margin-top: var(--space-2);
-  color: var(--color-primary-dark);
-  font-size: var(--font-size-100);
-  font-weight: 800;
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
-}
-
-.economic-pulse-widget__link:hover,
-.economic-pulse-widget__link:focus-visible,
-.economic-pulse-widget__source a:hover,
-.economic-pulse-widget__source a:focus-visible {
-  color: var(--color-primary);
 }
 
 .bank-spread-grid {
@@ -1688,9 +1635,6 @@ h2 {
     grid-template-columns: 1fr;
   }
 
-  .economic-pulse-widget__grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 48rem) {

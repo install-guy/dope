@@ -3,39 +3,17 @@
   const embedOrigin = "https://govspending.org";
   const embedUrl = `${embedOrigin}/embed/debt-counter/`;
 
-  function render(node) {
+  function render(node, index) {
+    const counterTitleId = `debt-counter-title-${index}`;
+    const translationTitleId = `debt-translation-title-${index}`;
+
     node.innerHTML = `
       <div class="debt-widget">
-        <article class="debt-family" aria-labelledby="debt-family-title">
-          <p class="debt-family__kicker">If Washington were a household earning $100,000</p>
-          <h3 id="debt-family-title">It would spend $135,000—and borrow the other $35,000.</h3>
-
-          <div class="debt-family__comparison" aria-label="Federal budget scaled to a household income of $100,000">
-            <div class="debt-family__amount">
-              <span>Comes in</span>
-              <strong>$100,000</strong>
-            </div>
-            <div class="debt-family__operator" aria-hidden="true">→</div>
-            <div class="debt-family__amount debt-family__amount--spending">
-              <span>Goes out</span>
-              <strong>$135,000</strong>
-            </div>
-            <div class="debt-family__operator" aria-hidden="true">+</div>
-            <div class="debt-family__amount debt-family__amount--debt">
-              <span>New debt</span>
-              <strong>$35,000</strong>
-            </div>
-          </div>
-
-          <p class="debt-family__owed">And it would already owe about <strong>$769,000</strong>.</p>
-          <p class="debt-family__note">Same proportions as the FY2025 federal budget. Smaller numbers.</p>
-        </article>
-
-        <aside class="debt-counter-card" aria-labelledby="debt-counter-title">
+        <aside class="debt-counter-card" aria-labelledby="${counterTitleId}">
           <div class="debt-counter-card__heading">
             <div>
-              <p class="debt-eyebrow">The running total</p>
-              <h3 id="debt-counter-title">Watch the national debt move</h3>
+              <p class="debt-eyebrow">Live debt clock</p>
+              <h3 id="${counterTitleId}">This number does not clock out</h3>
             </div>
             <a href="https://govspending.org/debt-clock/" target="_blank" rel="noopener noreferrer">View the full clock</a>
           </div>
@@ -51,7 +29,34 @@
           ></iframe>
         </aside>
 
-        <p class="debt-caveat"><strong>A country is not literally a household.</strong> This comparison explains the scale and direction of the budget—not household-style bankruptcy.</p>
+        <section class="debt-translation" aria-labelledby="${translationTitleId}">
+          <div class="debt-translation__heading">
+            <p class="debt-eyebrow">Put it on a kitchen table</p>
+            <h3 id="${translationTitleId}">If Washington brought home $100,000</h3>
+            <p>Using FY2025 proportions, it would spend about $134,000—and borrow the $34,000 gap.</p>
+          </div>
+
+          <div class="debt-family__comparison" aria-label="Federal budget scaled to household income: $100,000 coming in plus $34,000 borrowed equals $134,000 going out">
+            <div class="debt-family__amount">
+              <span>Comes in</span>
+              <strong>$100,000</strong>
+            </div>
+            <div class="debt-family__operator" aria-hidden="true">+</div>
+            <div class="debt-family__amount debt-family__amount--debt">
+              <span>Borrowed</span>
+              <strong>≈ $34,000</strong>
+            </div>
+            <div class="debt-family__operator" aria-hidden="true">=</div>
+            <div class="debt-family__amount debt-family__amount--spending">
+              <span>Goes out</span>
+              <strong>≈ $134,000</strong>
+            </div>
+          </div>
+
+          <p class="debt-family__takeaway">For every <strong>$100</strong> coming in, roughly <strong>$134</strong> goes out.</p>
+        </section>
+
+        <p class="debt-caveat"><strong>A country is not literally a household.</strong> This comparison shows the scale and direction of one year's budget—not household-style bankruptcy.</p>
 
         <p class="debt-sources">
           Household comparison: <a href="https://www.cbo.gov/publication/61307" target="_blank" rel="noopener noreferrer">Congressional Budget Office, FY2025</a>.
