@@ -1124,20 +1124,6 @@ h2 {
   max-width: 56rem;
 }
 
-.debt-intro > p:last-child {
-  max-width: 46rem;
-  color: var(--color-text-muted);
-}
-
-.debt-eyebrow {
-  margin: 0 0 0.35rem;
-  color: var(--color-secondary) !important;
-  font-size: 0.76rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
 .debt-widget {
   display: grid;
   gap: clamp(var(--space-4), 4vw, var(--space-6));
@@ -1215,8 +1201,7 @@ h2 {
 
 .debt-family__comparison {
   display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1fr;
-  align-items: center;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(0.6rem, 2vw, 1.1rem);
   margin-top: clamp(1.25rem, 3vw, 2rem);
 }
@@ -1238,21 +1223,24 @@ h2 {
 }
 
 .debt-family__amount strong {
+  display: block;
   color: var(--color-primary-dark);
   font-size: clamp(1.2rem, 3vw, 1.75rem);
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
 
 .debt-family__amount--spending strong,
-.debt-family__amount--debt strong {
+.debt-family__amount--debt strong,
+.debt-family__amount--interest strong {
   color: #b91c1c;
 }
 
-.debt-family__operator {
-  color: var(--color-secondary);
-  font-size: 1.5rem;
-  font-weight: 900;
+.debt-family__amount small {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
 .debt-family__takeaway {
@@ -1266,40 +1254,9 @@ h2 {
   font-size: 1.08em;
 }
 
-.debt-caveat {
-  margin: 0;
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-sm);
-  background: #eeeaf8;
-  color: var(--color-text-muted) !important;
-  font-size: 0.84rem;
-  line-height: 1.55;
-}
-
-.debt-caveat strong {
-  color: var(--color-primary-dark);
-}
-
-.debt-sources {
-  margin: calc(var(--space-4) * -0.5) 0 0;
-  font-size: 0.76rem;
-  line-height: 1.6;
-}
-
-.debt-sources a {
-  color: var(--color-primary-dark);
-  font-weight: 800;
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
-}
-
 @media (max-width: 42rem) {
   .debt-family__comparison {
     grid-template-columns: 1fr;
-  }
-
-  .debt-family__operator {
-    text-align: center;
   }
 
   .debt-counter-card__heading {

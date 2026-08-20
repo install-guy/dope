@@ -11,10 +11,7 @@
       <div class="debt-widget">
         <aside class="debt-counter-card" aria-labelledby="${counterTitleId}">
           <div class="debt-counter-card__heading">
-            <div>
-              <p class="debt-eyebrow">Live debt clock</p>
-              <h3 id="${counterTitleId}">This number does not clock out</h3>
-            </div>
+            <h3 id="${counterTitleId}">The National Debt, Right Now</h3>
             <a href="https://govspending.org/debt-clock/" target="_blank" rel="noopener noreferrer">View the full clock</a>
           </div>
           <iframe
@@ -31,37 +28,32 @@
 
         <section class="debt-translation" aria-labelledby="${translationTitleId}">
           <div class="debt-translation__heading">
-            <p class="debt-eyebrow">Put it on a kitchen table</p>
-            <h3 id="${translationTitleId}">If Washington brought home $100,000</h3>
-            <p>Using FY2025 proportions, it would spend about $134,000—and borrow the $34,000 gap.</p>
+            <h3 id="${translationTitleId}">If This Were Family Debt</h3>
+            <p>A family bringing home $100,000 would spend about $134,000, finance the $34,000 gap, and keep paying interest on the balance it already carries.</p>
           </div>
 
-          <div class="debt-family__comparison" aria-label="Federal budget scaled to household income: $100,000 coming in plus $34,000 borrowed equals $134,000 going out">
+          <div class="debt-family__comparison" aria-label="Federal finances scaled to a family income of $100,000">
             <div class="debt-family__amount">
-              <span>Comes in</span>
+              <span>Family income</span>
               <strong>$100,000</strong>
             </div>
-            <div class="debt-family__operator" aria-hidden="true">+</div>
-            <div class="debt-family__amount debt-family__amount--debt">
-              <span>Borrowed</span>
-              <strong>≈ $34,000</strong>
-            </div>
-            <div class="debt-family__operator" aria-hidden="true">=</div>
             <div class="debt-family__amount debt-family__amount--spending">
-              <span>Goes out</span>
+              <span>Family spending</span>
               <strong>≈ $134,000</strong>
+            </div>
+            <div class="debt-family__amount debt-family__amount--debt">
+              <span>Family debt carried</span>
+              <strong>≈ $765,000</strong>
+            </div>
+            <div class="debt-family__amount debt-family__amount--interest">
+              <span>Interest due</span>
+              <strong>≈ $19,600/year</strong>
+              <small>About $1,635 every month</small>
             </div>
           </div>
 
-          <p class="debt-family__takeaway">For every <strong>$100</strong> coming in, roughly <strong>$134</strong> goes out.</p>
+          <p class="debt-family__takeaway">That is like financing another <strong>≈ $34,000 purchase every year</strong> while interest keeps coming due on the family debt already on the books.</p>
         </section>
-
-        <p class="debt-caveat"><strong>A country is not literally a household.</strong> This comparison shows the scale and direction of one year's budget—not household-style bankruptcy.</p>
-
-        <p class="debt-sources">
-          Household comparison: <a href="https://www.cbo.gov/publication/61307" target="_blank" rel="noopener noreferrer">Congressional Budget Office, FY2025</a>.
-          Counter: <a href="https://govspending.org/debt-clock/" target="_blank" rel="noopener noreferrer">GOVSPENDING.org</a>, anchored to Treasury Debt to the Penny.
-        </p>
       </div>
     `;
   }
