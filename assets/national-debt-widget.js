@@ -1,134 +1,77 @@
 (function () {
   const selector = "[data-national-debt]";
-  const endpoint = "/api/national-debt";
-  const revenue = 5.2e12;
-  const outlays = 7.0e12;
-  const deficit = 1.8e12;
-  const netInterest = 970e9;
-  const familyIncome = 100000;
+  const embedOrigin = "https://govspending.org";
+  const embedUrl = `${embedOrigin}/embed/debt-counter/`;
 
-  const dollars = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0
-  });
-
-  function familyValue(amount) {
-    return dollars.format((amount / revenue) * familyIncome);
-  }
-
-  function debtValue(amount) {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(amount);
-  }
-
-  function renderShell(node, debt, officialDate, dailyChange, isLive) {
-    const counterLabel = isLive ? "Estimated national debt now" : "$40 trillion reference scale";
-    const pace = isLive
-      ? `Recent pace: <strong>${dailyChange >= 0 ? "+" : "−"}${dollars.format(Math.abs(dailyChange))} per day</strong>`
-      : "Treasury's live update is temporarily unavailable.";
-    const counterNote = isLive
-      ? `The counter estimates movement between Treasury updates using the latest daily change. Last official reading: ${formatDate(officialDate)}.`
-      : "The family comparison remains available using the $40 trillion reference figure. This number is not being presented as a live reading.";
-
+  function render(node) {
     node.innerHTML = `
       <div class="debt-widget">
-        <div class="debt-counter-card">
-          <p class="debt-counter-card__label"><span aria-hidden="true"></span> ${counterLabel}</p>
-          <p class="debt-counter-card__number" data-debt-counter>${debtValue(debt)}</p>
-          <p class="debt-counter-card__pace">${pace}</p>
-          <p class="debt-counter-card__note">${counterNote}</p>
-        </div>
+        <article class="debt-family" aria-labelledby="debt-family-title">
+          <p class="debt-family__kicker">If Washington were a household earning $100,000</p>
+          <h3 id="debt-family-title">It would spend $135,000—and borrow the other $35,000.</h3>
 
-        <div class="debt-family">
-          <div class="debt-family__heading">
-            <div>
-              <p class="debt-eyebrow">If Washington were a family of three</p>
-              <h3>$100,000 comes in. $135,000 goes out.</h3>
+          <div class="debt-family__comparison" aria-label="Federal budget scaled to a household income of $100,000">
+            <div class="debt-family__amount">
+              <span>Comes in</span>
+              <strong>$100,000</strong>
             </div>
-            <span class="debt-family__badge">Same proportions. Smaller numbers.</span>
+            <div class="debt-family__operator" aria-hidden="true">→</div>
+            <div class="debt-family__amount debt-family__amount--spending">
+              <span>Goes out</span>
+              <strong>$135,000</strong>
+            </div>
+            <div class="debt-family__operator" aria-hidden="true">+</div>
+            <div class="debt-family__amount debt-family__amount--debt">
+              <span>New debt</span>
+              <strong>$35,000</strong>
+            </div>
           </div>
 
-          <div class="debt-family__grid">
-            ${metric("Annual income", familyValue(revenue), "$5.2T federal revenue")}
-            ${metric("Annual spending", familyValue(outlays), "$7.0T federal outlays")}
-            ${metric("Added every year", familyValue(deficit), "$1.8T deficit")}
-            ${metric("Already owed", familyValue(debt), "Live national debt", true)}
-            ${metric("Interest every year", familyValue(netInterest), "$970B net interest")}
+          <p class="debt-family__owed">And it would already owe about <strong>$769,000</strong>.</p>
+          <p class="debt-family__note">Same proportions as the FY2025 federal budget. Smaller numbers.</p>
+        </article>
+
+        <aside class="debt-counter-card" aria-labelledby="debt-counter-title">
+          <div class="debt-counter-card__heading">
+            <div>
+              <p class="debt-eyebrow">The running total</p>
+              <h3 id="debt-counter-title">Watch the national debt move</h3>
+            </div>
+            <a href="https://govspending.org/debt-clock/" target="_blank" rel="noopener noreferrer">View the full clock</a>
           </div>
+          <iframe
+            class="debt-counter-card__frame"
+            src="${embedUrl}"
+            width="100%"
+            height="200"
+            frameborder="0"
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+            title="US National Debt — Live Counter — via GOVSPENDING.org"
+          ></iframe>
+        </aside>
 
-          <p class="debt-family__bottom-line">
-            Almost one dollar in every five earned goes to interest on old spending — before the principal meaningfully comes down.
-          </p>
-        </div>
-
-        <div class="debt-caveat">
-          <strong>A country is not a household.</strong>
-          <p>The United States can tax a vast economy, issue debt in its own currency, and refinance continuously. This comparison explains scale and direction; it is not a prediction of household-style bankruptcy.</p>
-        </div>
+        <p class="debt-caveat"><strong>A country is not literally a household.</strong> This comparison explains the scale and direction of the budget—not household-style bankruptcy.</p>
 
         <p class="debt-sources">
-          Receipts, outlays, deficit, and interest: <a href="https://www.cbo.gov/publication/61307" target="_blank" rel="noopener noreferrer">Congressional Budget Office, FY2025</a>.
-          Live debt: <a href="https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/debt-to-the-penny" target="_blank" rel="noopener noreferrer">U.S. Treasury, Debt to the Penny</a>.
+          Household comparison: <a href="https://www.cbo.gov/publication/61307" target="_blank" rel="noopener noreferrer">Congressional Budget Office, FY2025</a>.
+          Counter: <a href="https://govspending.org/debt-clock/" target="_blank" rel="noopener noreferrer">GOVSPENDING.org</a>, anchored to Treasury Debt to the Penny.
         </p>
       </div>
     `;
-
-    if (isLive) animateCounter(node.querySelector("[data-debt-counter]"), debt, dailyChange);
   }
 
-  function metric(label, value, source, wide) {
-    return `
-      <article class="debt-metric${wide ? " debt-metric--danger" : ""}">
-        <p>${label}</p>
-        <strong>${value}</strong>
-        <small>${source}</small>
-      </article>
-    `;
-  }
+  const widgets = Array.from(document.querySelectorAll(selector));
+  widgets.forEach(render);
 
-  function animateCounter(counter, startingDebt, dailyChange) {
-    if (!counter || !Number.isFinite(dailyChange) || dailyChange === 0) return;
-    const started = Date.now();
+  window.addEventListener("message", function (event) {
+    if (event.origin !== embedOrigin || event.data?.type !== "govspending:embed-height") return;
+    const height = Number(event.data.height);
+    if (!Number.isFinite(height) || height < 160 || height > 600) return;
 
-    const update = function () {
-      const elapsedSeconds = (Date.now() - started) / 1000;
-      counter.textContent = debtValue(startingDebt + (dailyChange / 86400) * elapsedSeconds);
-    };
-
-    update();
-    window.setInterval(update, 100);
-  }
-
-  function formatDate(value) {
-    const date = new Date(`${value}T12:00:00`);
-    return new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" }).format(date);
-  }
-
-  async function load(node) {
-    node.innerHTML = '<div class="debt-widget debt-widget--loading" role="status">Counting the tab...</div>';
-
-    try {
-      const response = await fetch(endpoint, { cache: "no-store" });
-      if (!response.ok) throw new Error("Debt endpoint failed");
-      const data = await response.json();
-      if (!data.latest || !Number.isFinite(data.latest.value)) throw new Error("Debt data unavailable");
-      renderShell(
-        node,
-        data.latest.value,
-        data.latest.recordDate,
-        Number(data.dailyChange) || 0,
-        data.ok === true
-      );
-    } catch (error) {
-      console.error(error);
-      renderShell(node, 40e12, "", 0, false);
-    }
-  }
-
-  document.querySelectorAll(selector).forEach(load);
+    widgets.forEach(function (widget) {
+      const frame = widget.querySelector(".debt-counter-card__frame");
+      if (frame && event.source === frame.contentWindow) frame.style.height = `${Math.ceil(height)}px`;
+    });
+  });
 })();

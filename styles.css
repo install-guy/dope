@@ -1138,45 +1138,39 @@ h2 {
 /* National debt */
 #national-debt .section-stack { gap: var(--space-4); align-items: start; }
 .debt-intro, .debt-widget { width: 100%; max-width: 56rem; }
-.debt-intro p { max-width: 46rem; }
+.debt-intro > p:last-child { max-width: 46rem; color: var(--color-text-muted); }
 .debt-eyebrow { margin: 0 0 0.35rem; color: var(--color-secondary) !important; font-size: 0.76rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
 .debt-widget { display: grid; gap: var(--space-4); }
-.debt-counter-card { overflow: hidden; padding: clamp(1.25rem, 4vw, 2rem); border-radius: var(--radius-md); background: #17132a; box-shadow: var(--shadow-sm); }
-.debt-counter-card__label { display: flex; align-items: center; gap: 0.55rem; margin: 0; color: #ddd6fe !important; font-size: 0.78rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
-.debt-counter-card__label span { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: #fb923c; box-shadow: 0 0 0 0.28rem rgba(251,146,60,.16); }
-.debt-counter-card__number { margin: var(--space-3) 0; color: #fff !important; font-size: clamp(1.65rem, 5.7vw, 3.65rem); font-weight: 900; letter-spacing: -0.045em; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.debt-counter-card__pace { margin: 0; color: #c4b5fd !important; }
-.debt-counter-card__pace strong { color: #fdba74; }
-.debt-counter-card__note { max-width: 48rem; margin: var(--space-3) 0 0; color: #a8a2b8 !important; font-size: 0.78rem; line-height: 1.5; }
-.debt-family { padding: clamp(1.1rem, 3vw, 1.75rem); border: 1px solid rgba(124,58,237,.2); border-radius: var(--radius-md); background: #fff; box-shadow: var(--shadow-sm); }
-.debt-family__heading { display: flex; align-items: start; justify-content: space-between; gap: var(--space-3); }
-.debt-family__heading h3 { margin: 0; color: var(--color-text); font-size: clamp(1.25rem, 3vw, 1.85rem); }
-.debt-family__badge { max-width: 10rem; padding: .45rem .65rem; border-radius: 999px; background: #f3f0ff; color: var(--color-primary-dark); font-size: .68rem; font-weight: 800; line-height: 1.25; text-align: center; }
-.debt-family__grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--space-3); margin-top: var(--space-4); }
-.debt-metric { padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: #f9fbff; }
-.debt-metric p, .debt-metric small { display: block; margin: 0; font-size: .76rem; }
-.debt-metric strong { display: block; margin: .25rem 0; color: var(--color-text); font-size: clamp(1.25rem, 3vw, 1.7rem); }
-.debt-metric--danger { border-color: rgba(220,38,38,.2); background: #fff7f7; }
-.debt-metric--danger strong { color: #b91c1c; }
-.debt-family__bottom-line { margin: var(--space-4) 0 0; padding: var(--space-3); border-left: .25rem solid var(--color-secondary); background: #fff7ed; color: var(--color-text) !important; font-weight: 750; }
-.debt-caveat { padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); background: #eeeaf8; }
+.debt-family { padding: clamp(1.4rem, 4vw, 2.4rem); border: 1px solid rgba(124,58,237,.24); border-left: .42rem solid var(--color-secondary); border-radius: var(--radius-md); background: linear-gradient(145deg, #fff 0%, #f7f5ff 100%); box-shadow: var(--shadow-sm); }
+.debt-family__kicker { margin: 0 0 .4rem; color: var(--color-primary-dark) !important; font-size: .78rem; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
+.debt-family h3 { max-width: 48rem; margin: 0; color: var(--color-text); font-size: clamp(1.55rem, 4vw, 2.55rem); letter-spacing: -.025em; line-height: 1.12; }
+.debt-family__comparison { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: clamp(.6rem, 2vw, 1.1rem); margin-top: clamp(1.25rem, 3vw, 2rem); }
+.debt-family__amount { padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: #fff; }
+.debt-family__amount span { display: block; margin-bottom: .2rem; color: var(--color-text-muted); font-size: .76rem; font-weight: 800; text-transform: uppercase; }
+.debt-family__amount strong { color: var(--color-primary-dark); font-size: clamp(1.25rem, 3vw, 1.85rem); font-variant-numeric: tabular-nums; }
+.debt-family__amount--spending strong, .debt-family__amount--debt strong { color: #b91c1c; }
+.debt-family__operator { color: var(--color-secondary); font-size: 1.5rem; font-weight: 900; }
+.debt-family__owed { margin: var(--space-4) 0 0; color: var(--color-text) !important; font-size: clamp(1.05rem, 2.4vw, 1.35rem); }
+.debt-family__owed strong { color: #b91c1c; font-size: 1.15em; }
+.debt-family__note { margin: .35rem 0 0; color: var(--color-text-muted) !important; font-size: .78rem; }
+.debt-counter-card { overflow: hidden; padding: clamp(1rem, 3vw, 1.5rem); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #fff; box-shadow: var(--shadow-sm); }
+.debt-counter-card__heading { display: flex; align-items: end; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-3); }
+.debt-counter-card__heading h3 { margin: 0; color: var(--color-text); font-size: clamp(1.1rem, 2.5vw, 1.45rem); }
+.debt-counter-card__heading a { flex: 0 0 auto; color: var(--color-primary-dark); font-size: .78rem; font-weight: 800; text-decoration: underline; text-underline-offset: .15em; }
+.debt-counter-card__frame { display: block; width: 100%; min-height: 200px; border: 0; border-radius: var(--radius-sm); background: #17132a; transition: height .2s ease; }
+.debt-caveat { margin: 0; padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); background: #eeeaf8; color: var(--color-text-muted) !important; font-size: .84rem; line-height: 1.55; }
 .debt-caveat strong { color: var(--color-primary-dark); }
-.debt-caveat p { margin: .25rem 0 0; font-size: .86rem; line-height: 1.55; }
 .debt-sources { margin: 0; font-size: .76rem; line-height: 1.6; }
-.debt-sources a, .debt-widget--error a { color: var(--color-primary-dark); font-weight: 800; text-decoration: underline; text-underline-offset: .15em; }
-.debt-widget--loading, .debt-widget--error { padding: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #fff; color: var(--color-text); }
-.debt-widget--error p { margin-bottom: 0; }
+.debt-sources a { color: var(--color-primary-dark); font-weight: 800; text-decoration: underline; text-underline-offset: .15em; }
 
 @media (max-width: 42rem) {
-  .debt-family__heading { display: grid; }
-  .debt-family__badge { max-width: none; justify-self: start; }
-  .debt-family__grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .debt-counter-card__number { font-size: clamp(1.5rem, 7.4vw, 2.4rem); }
+  .debt-family__comparison { grid-template-columns: 1fr; }
+  .debt-family__operator { display: none; }
+  .debt-counter-card__heading { align-items: start; flex-direction: column; }
 }
 
 @media (max-width: 27rem) {
-  .debt-family__grid { grid-template-columns: 1fr; }
-  .debt-counter-card__number { font-size: 1.45rem; }
+  .debt-family { border-left-width: .3rem; }
 }
 
 #bank-spread .section-lead {
