@@ -787,22 +787,37 @@ h2 {
 
 .feed-expand {
   display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   margin-top: var(--space-3);
-  padding: 0;
-  border: 0;
-  background: transparent;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgba(124, 58, 237, 0.22);
+  border-radius: 999px;
+  background: #f5f3ff;
   color: var(--color-primary-dark);
   font: inherit;
   font-size: var(--font-size-100);
   font-weight: 800;
+  line-height: 1;
   cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.feed-expand::after {
+  content: "↓";
+  font-size: 0.9em;
+  transition: transform 150ms ease;
+}
+
+.feed-expand[aria-expanded="true"]::after {
+  transform: rotate(180deg);
 }
 
 .feed-expand:hover,
 .feed-expand:focus-visible {
+  border-color: rgba(124, 58, 237, 0.42);
+  background: #ede9fe;
   color: var(--color-primary);
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
 }
 
 .feed-post__full {

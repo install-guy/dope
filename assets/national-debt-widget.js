@@ -28,8 +28,8 @@
 
           <div class="debt-comparison" aria-labelledby="${comparisonTitleId}">
             <div class="debt-comparison__heading">
-              <h3 id="${comparisonTitleId}">At the scale of a family earning $100,000</h3>
-              <p>The same proportions, translated into familiar numbers.</p>
+              <h3 id="${comparisonTitleId}">Picture a family earning $100,000 a year</h3>
+              <p>Here is what Washington's debt and FY2025 budget would look like on that income.</p>
             </div>
 
             <dl class="debt-metrics" aria-label="Federal finances scaled to a family income of $100,000">
@@ -38,25 +38,25 @@
                 <dd>≈ $765,000</dd>
               </div>
               <div class="debt-metric">
-                <dt>Annual interest</dt>
-                <dd>≈ $19,600</dd>
-              </div>
-              <div class="debt-metric">
-                <dt>Annual income</dt>
+                <dt>Yearly income</dt>
                 <dd>$100,000</dd>
               </div>
               <div class="debt-metric">
-                <dt>Annual spending</dt>
+                <dt>Interest this year</dt>
+                <dd>≈ $19,600</dd>
+              </div>
+              <div class="debt-metric">
+                <dt>Total spending</dt>
                 <dd>≈ $134,000</dd>
               </div>
               <div class="debt-metric">
-                <dt>New borrowing</dt>
+                <dt>Added debt</dt>
                 <dd>≈ $34,000</dd>
               </div>
             </dl>
 
             <p class="debt-comparison__summary">
-              Nearly one dollar in five goes to interest before the balance falls by a dollar, while spending continues to exceed income.
+              The family already owes more than seven times its yearly income. Nearly 20% of what it earns goes to interest, yet it still spends $34,000 more than it makes and adds that amount to the debt. That is not a plan to pay debt down. It is a plan to keep it growing.
             </p>
           </div>
         </section>
