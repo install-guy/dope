@@ -14,8 +14,19 @@ const APPROVED_URLS = [];
 
 function cleanText(value = "") {
   return value
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
+    .replace(/<(?:br\s*\/?>|\/(?:p|div|li|h[1-6]))>/gi, "\n")
     .replace(/<[^>]*>/g, "")
-    .replace(/\s+/g, " ")
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;|&#34;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/[ \t]+/g, " ")
+    .replace(/ *\n */g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
 
@@ -61,13 +72,17 @@ export async function onRequestGet() {
       items = items.slice(0, 10);
     }
 
-    const cleanedItems = items.map((item) => ({
-      title: item.title || "Untitled",
-      url: item.url,
-      date: item.date_published || item.date_modified || "",
-      summary: shorten(item.summary || item.content_text || item.content_html || ""),
-      image: item.image || ""
-    }));
+    const cleanedItems = items.map((item) => {
+      const content = cleanText(item.content_text || item.content_html || item.summary || "");
+
+      return {
+        title: item.title || "Untitled",
+        date: item.date_published || item.date_modified || "",
+        summary: shorten(item.summary || content),
+        content,
+        image: item.image || ""
+      };
+    });
 
     return new Response(
       JSON.stringify({

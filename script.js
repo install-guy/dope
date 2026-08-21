@@ -301,7 +301,7 @@ if (year) year.textContent = new Date().getFullYear();
 
 function getWtfjhtFeedMarkup(items) {
   return items
-    .map((item) => {
+    .map((item, index) => {
       const date = item.date
         ? new Date(item.date).toLocaleDateString(undefined, {
             month: 'short',
@@ -312,14 +312,39 @@ function getWtfjhtFeedMarkup(items) {
 
       const safeTitle = escapeHtml(item.title || 'Untitled');
       const safeSummary = escapeHtml(item.summary || '');
-      const safeUrl = escapeHtml(item.url || '#');
+      const contentId = `wtfjht-full-post-${index}`;
+      const contentParagraphs = String(item.content || '')
+        .split(/\n+/)
+        .map((paragraph) => paragraph.trim())
+        .filter(Boolean);
+
+      if (/^today in one sentence\s*:/i.test(contentParagraphs[0] || '')) {
+        contentParagraphs.shift();
+      }
+
+      const fullParagraphs = contentParagraphs
+        .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
+        .join('');
+      const hasFullPost = Boolean(fullParagraphs);
 
       return `
         <article class="feed-post">
           ${date ? `<p class="feed-date">${escapeHtml(date)}</p>` : ''}
           <h3>${safeTitle}</h3>
-          <p>${safeSummary}</p>
-          ${safeUrl !== '#' ? `<a class="feed-link" href="${safeUrl}" target="_blank" rel="noopener noreferrer">Read the full post</a>` : ''}
+          <p class="feed-post__summary">${safeSummary}</p>
+          ${hasFullPost ? `
+            <div class="feed-post__full" id="${contentId}" hidden>
+              ${fullParagraphs}
+            </div>
+            <button
+              class="feed-expand"
+              type="button"
+              aria-expanded="false"
+              aria-controls="${contentId}"
+            >
+              Read the full post
+            </button>
+          ` : ''}
         </article>
       `;
     })
@@ -328,11 +353,30 @@ function getWtfjhtFeedMarkup(items) {
 
 async function loadWtfjhtFeed() {
   const feedPanel = document.querySelector('#wtfjht-feed');
-  const latestLink = document.querySelector('#wtfjht-latest-link');
 
   if (!feedPanel) {
     return;
   }
+
+  feedPanel.addEventListener('click', (event) => {
+    const button = event.target.closest('.feed-expand');
+
+    if (!button || !feedPanel.contains(button)) {
+      return;
+    }
+
+    const contentId = button.getAttribute('aria-controls');
+    const fullPost = contentId ? document.getElementById(contentId) : null;
+
+    if (!fullPost) {
+      return;
+    }
+
+    const willExpand = button.getAttribute('aria-expanded') !== 'true';
+    button.setAttribute('aria-expanded', String(willExpand));
+    button.textContent = willExpand ? 'Show less' : 'Read the full post';
+    fullPost.hidden = !willExpand;
+  });
 
   try {
     const response = await fetch('/api/wtfjht', { cache: 'no-store' });
@@ -354,11 +398,6 @@ async function loadWtfjhtFeed() {
     }
 
     const visibleItems = items.slice(0, 1);
-    const latestItemUrl = visibleItems[0]?.url;
-
-    if (latestLink && latestItemUrl) {
-      latestLink.href = latestItemUrl;
-    }
 
     feedPanel.innerHTML = getWtfjhtFeedMarkup(visibleItems);
   } catch (error) {
