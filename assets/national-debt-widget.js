@@ -1,9 +1,17 @@
 (function () {
   const selector = "[data-national-debt]";
   const endpoint = "/api/national-debt";
+  const treasuryEndpoint =
+    "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny?sort=-record_date&page%5Bsize%5D=2";
+  const storageKey = "national-debt-snapshot";
+  const demographicFallback = {
+    year: 2024,
+    population: 340110990,
+    households: 132737146
+  };
   const millionPerDay = 1e6;
   const daysPerYear = 365.2425;
-  const retryDelayMs = 15000;
+  const retryDelayMs = 3000;
   const refreshDelayMs = 15 * 60 * 1000;
   const animationTimers = new WeakMap();
   const refreshTimers = new WeakMap();
@@ -67,6 +75,24 @@
     }).format(date);
   }
 
+  function getCachedData() {
+    try {
+      const cached = JSON.parse(window.localStorage.getItem(storageKey));
+      if (!cached?.latest || !Number.isFinite(cached.latest.value) || !cached.demographics) return null;
+      return cached;
+    } catch {
+      return null;
+    }
+  }
+
+  function cacheData(data) {
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify(data));
+    } catch {
+      // The live display still works when browser storage is unavailable.
+    }
+  }
+
   function estimateCurrentDebt(debt, dailyChange, recordDate, fetchedAt) {
     if (!recordDate || !fetchedAt || dailyChange === 0) return debt;
     const endOfRecordDate = new Date(`${recordDate}T23:59:59Z`).getTime();
@@ -91,9 +117,11 @@
     const population = Number(demographics.population);
     const households = Number(demographics.households);
     const isLive = data.ok === true;
-    const liveNote = isLive
-      ? `Estimate based on the latest Treasury reading from ${formatDate(data.latest.recordDate)} and its recent daily change.`
-      : "Treasury data is temporarily unavailable. Showing a $40 trillion reference figure and retrying automatically.";
+    const liveNote = data.stale
+      ? `Estimate based on the last available Treasury reading from ${formatDate(data.latest.recordDate)}. Refreshing the source automatically.`
+      : isLive
+        ? `Estimate based on the latest Treasury reading from ${formatDate(data.latest.recordDate)} and its recent daily change.`
+        : "Treasury data is temporarily unavailable. Showing a $40 trillion reference figure and retrying automatically.";
     const rateValue = isLive && dailyChange !== 0 ? formatScaleCurrency(dailyChange) : "Unavailable";
     const hourlyValue = isLive && dailyChange !== 0 ? formatScaleCurrency(hourlyChange) : "Unavailable";
 
@@ -169,29 +197,85 @@
     refreshTimers.set(node, window.setTimeout(() => load(node, index, false), delay));
   }
 
+  function validateDebtData(data) {
+    if (data.ok !== true || !data.latest || !Number.isFinite(data.latest.value) || !data.demographics) {
+      throw new Error("Debt data unavailable");
+    }
+    return data;
+  }
+
+  function toObservation(row) {
+    const value = Number.parseFloat(row.tot_pub_debt_out_amt);
+    if (!row.record_date || !Number.isFinite(value)) return null;
+    return { recordDate: row.record_date, value };
+  }
+
+  function daysBetween(first, second) {
+    return Math.round((new Date(`${second}T00:00:00Z`) - new Date(`${first}T00:00:00Z`)) / 86400000);
+  }
+
+  async function fetchDirectTreasuryData() {
+    const response = await fetch(treasuryEndpoint, { cache: "no-store" });
+    if (!response.ok) throw new Error("Direct Treasury request failed");
+
+    const payload = await response.json();
+    const observations = (payload.data || []).map(toObservation).filter(Boolean);
+    if (!observations.length) throw new Error("Treasury returned no debt observations");
+
+    const latest = observations[0];
+    const previous = observations[1] || null;
+    const elapsedDays = previous
+      ? Math.max(1, daysBetween(previous.recordDate, latest.recordDate))
+      : 1;
+
+    return {
+      ok: true,
+      fetchedAt: new Date().toISOString(),
+      latest,
+      previous,
+      dailyChange: previous ? (latest.value - previous.value) / elapsedDays : 0,
+      demographics: demographicFallback
+    };
+  }
+
+  async function fetchDebtData() {
+    try {
+      const response = await fetch(endpoint, { cache: "no-store" });
+      if (!response.ok) throw new Error("Debt endpoint failed");
+      return validateDebtData(await response.json());
+    } catch {
+      return fetchDirectTreasuryData();
+    }
+  }
+
   async function load(node, index, showLoading = true) {
     if (showLoading) {
       node.innerHTML = '<div class="debt-widget debt-widget--loading" role="status">Loading the latest Treasury total...</div>';
     }
 
     try {
-      const response = await fetch(endpoint, { cache: "no-store" });
-      if (!response.ok) throw new Error("Debt endpoint failed");
-      const data = await response.json();
-      if (!data.latest || !Number.isFinite(data.latest.value) || !data.demographics) {
-        throw new Error("Debt data unavailable");
-      }
+      const data = await fetchDebtData();
+      cacheData(data);
       render(node, data, index);
       scheduleLoad(node, index, refreshDelayMs);
     } catch (error) {
       console.error(error);
-      if (showLoading || !node.querySelector("[data-debt-counter]")) {
+      const cachedData = getCachedData();
+
+      if (cachedData) {
+        render(node, {
+          ...cachedData,
+          ok: true,
+          stale: true,
+          fetchedAt: new Date().toISOString()
+        }, index);
+      } else if (showLoading || !node.querySelector("[data-debt-counter]")) {
         render(node, {
           ok: false,
           fetchedAt: "",
           latest: { value: 40e12, recordDate: "" },
           dailyChange: 0,
-          demographics: { year: 2024, population: 340110990, households: 132737146 }
+          demographics: demographicFallback
         }, index);
       }
       scheduleLoad(node, index, retryDelayMs);
