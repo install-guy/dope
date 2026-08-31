@@ -11,6 +11,8 @@
   };
   const millionPerDay = 1e6;
   const daysPerYear = 365.2425;
+  const medianWeeklyEarnings = 1251;
+  const medianAnnualEarnings = medianWeeklyEarnings * 52;
   const retryDelayMs = 3000;
   const refreshDelayMs = 15 * 60 * 1000;
   const requestTimeoutMs = 4500;
@@ -113,10 +115,10 @@
     const debt = data.ok === true
       ? estimateCurrentDebt(data.latest.value, dailyChange, data.latest.recordDate, data.fetchedAt)
       : data.latest.value;
+    const secondChange = dailyChange / 86400;
     const hourlyChange = dailyChange / 24;
     const demographics = data.demographics;
     const population = Number(demographics.population);
-    const households = Number(demographics.households);
     const isLive = data.ok === true;
     const liveNote = data.stale
       ? `Estimate based on the last available Treasury reading from ${formatDate(data.latest.recordDate)}. Refreshing the source automatically.`
@@ -124,7 +126,11 @@
         ? `Estimate based on the latest Treasury reading from ${formatDate(data.latest.recordDate)} and its recent daily change.`
         : "Treasury data is temporarily unavailable. Showing a $40 trillion reference figure and retrying automatically.";
     const rateValue = isLive && dailyChange !== 0 ? formatScaleCurrency(dailyChange) : "Unavailable";
+    const secondValue = isLive && dailyChange !== 0 ? formatScaleCurrency(secondChange) : "Unavailable";
     const hourlyValue = isLive && dailyChange !== 0 ? formatScaleCurrency(hourlyChange) : "Unavailable";
+    const speedComparison = isLive && secondChange > medianAnnualEarnings
+      ? `At the recent rate, the debt grows by roughly ${secondValue} in one second—more than the median full-time worker earns in a year (about ${wholeDollars.format(roundTo(medianAnnualEarnings, 1000))}).`
+      : "";
 
     node.innerHTML = `
       <div class="debt-widget">
@@ -149,17 +155,19 @@
             <dl class="debt-metrics" aria-label="National debt scale comparisons">
               ${metric("Total national debt", formatTrillions(debt), isLive ? "Live estimate" : "Reference figure", "data-total-debt")}
               ${metric("Per person", formatScaleCurrency(debt / population), `Using ${demographics.year} Census estimate`, "data-per-person")}
-              ${metric("Per U.S. household", formatScaleCurrency(debt / households), `Using ${demographics.year} Census estimate`, "data-per-household")}
+              ${metric("Added per second", secondValue, "Recent-rate estimate")}
               ${metric("Added per hour", hourlyValue, "Recent-rate estimate")}
               ${metric("Added per day", rateValue, "Recent-rate estimate")}
             </dl>
+
+            ${speedComparison ? `<p class="debt-comparison__summary">${speedComparison}</p>` : ""}
 
             <p class="debt-comparison__summary" data-spending-comparison>
               If you spent $1 million every day, it would take roughly ${wholeNumbers.format(roundTo(debt / millionPerDay / daysPerYear, 1000))} years to spend ${formatWholeTrillions(debt)}.
             </p>
 
             <p class="debt-comparison__sources">
-              Counts are estimates from the 2024 American Community Survey: <a href="https://data.census.gov/table/ACSDT1Y2024.B01003" target="_blank" rel="noopener noreferrer">population</a> and <a href="https://data.census.gov/table/ACSDT1Y2024.B11001" target="_blank" rel="noopener noreferrer">households</a>.
+              Population uses the <a href="https://data.census.gov/table/ACSDT1Y2024.B01003" target="_blank" rel="noopener noreferrer">2024 American Community Survey</a>. The earnings comparison annualizes <a href="https://www.bls.gov/news.release/wkyeng.htm" target="_blank" rel="noopener noreferrer">BLS median weekly earnings for full-time workers, Q2 2026</a>.
             </p>
           </div>
         </section>
@@ -167,16 +175,15 @@
     `;
 
     if (isLive && dailyChange !== 0) {
-      animationTimers.set(node, animateValues(node, debt, dailyChange, population, households));
+      animationTimers.set(node, animateValues(node, debt, dailyChange, population));
     }
   }
 
-  function animateValues(node, startingDebt, dailyChange, population, households) {
+  function animateValues(node, startingDebt, dailyChange, population) {
     const started = Date.now();
     const counter = node.querySelector("[data-debt-counter]");
     const total = node.querySelector("[data-total-debt]");
     const perPerson = node.querySelector("[data-per-person]");
-    const perHousehold = node.querySelector("[data-per-household]");
     const comparison = node.querySelector("[data-spending-comparison]");
 
     function update() {
@@ -185,7 +192,6 @@
       counter.textContent = exactDollars.format(currentDebt);
       total.textContent = formatTrillions(currentDebt);
       perPerson.textContent = formatScaleCurrency(currentDebt / population);
-      perHousehold.textContent = formatScaleCurrency(currentDebt / households);
       comparison.textContent = `If you spent $1 million every day, it would take roughly ${wholeNumbers.format(roundTo(currentDebt / millionPerDay / daysPerYear, 1000))} years to spend ${formatWholeTrillions(currentDebt)}.`;
     }
 
