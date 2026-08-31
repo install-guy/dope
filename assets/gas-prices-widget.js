@@ -132,9 +132,11 @@
       return null;
     }
 
-    const difference = current - previous;
+    const currentCents = Math.round((current + Number.EPSILON) * 100);
+    const previousCents = Math.round((previous + Number.EPSILON) * 100);
+    const differenceCents = currentCents - previousCents;
 
-    if (Math.abs(difference) < 0.005) {
+    if (differenceCents === 0) {
       return {
         amount: "$0.00",
         direction: "flat",
@@ -142,6 +144,8 @@
         label: "Unchanged from previous reading"
       };
     }
+
+    const difference = differenceCents / 100;
 
     return {
       amount: `$${Math.abs(difference).toFixed(2)}`,

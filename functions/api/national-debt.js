@@ -3,6 +3,7 @@ const DEBT_ENDPOINT =
 const CENSUS_ENDPOINT =
   "https://api.census.gov/data/2024/acs/acs1?get=NAME%2CB01003_001E%2CB11001_001E&for=us%3A1";
 const REFERENCE_DEBT = 40e12;
+const TREASURY_TIMEOUT_MS = 4000;
 const DEMOGRAPHIC_FALLBACK = {
   year: 2024,
   population: 340110990,
@@ -30,7 +31,7 @@ export async function onRequestGet(context) {
       dailyChange: 0,
       demographics,
       error: debtResult.reason instanceof Error ? debtResult.reason.message : "Debt data unavailable"
-    });
+    }, debtResult.reason?.name === "TimeoutError" ? 504 : 502);
   }
 
   return json({
@@ -44,12 +45,28 @@ export async function onRequestGet(context) {
 }
 
 async function getDebtData() {
-  const response = await fetch(DEBT_ENDPOINT, {
-    headers: {
-      Accept: "application/json",
-      "User-Agent": "dopeoclock.com Treasury debt reader"
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), TREASURY_TIMEOUT_MS);
+  let response;
+
+  try {
+    response = await fetch(DEBT_ENDPOINT, {
+      signal: controller.signal,
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "dopeoclock.com Treasury debt reader"
+      }
+    });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      const timeoutError = new Error(`Treasury request timed out after ${TREASURY_TIMEOUT_MS}ms`);
+      timeoutError.name = "TimeoutError";
+      throw timeoutError;
     }
-  });
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     throw new Error(`Treasury request failed with status ${response.status}`);
@@ -110,11 +127,12 @@ function daysBetween(first, second) {
   return Math.round((new Date(`${second}T00:00:00Z`) - new Date(`${first}T00:00:00Z`)) / 86400000);
 }
 
-function json(data) {
+function json(data, status = 200) {
   return new Response(JSON.stringify(data, null, 2), {
+    status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "public, max-age=900"
+      "Cache-Control": status >= 400 ? "no-store" : "public, max-age=900"
     }
   });
 }

@@ -13,6 +13,7 @@
   const daysPerYear = 365.2425;
   const retryDelayMs = 3000;
   const refreshDelayMs = 15 * 60 * 1000;
+  const requestTimeoutMs = 4500;
   const animationTimers = new WeakMap();
   const refreshTimers = new WeakMap();
 
@@ -214,8 +215,22 @@
     return Math.round((new Date(`${second}T00:00:00Z`) - new Date(`${first}T00:00:00Z`)) / 86400000);
   }
 
+  async function fetchWithTimeout(url) {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), requestTimeoutMs);
+
+    try {
+      return await fetch(url, {
+        cache: "no-store",
+        signal: controller.signal
+      });
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
+
   async function fetchDirectTreasuryData() {
-    const response = await fetch(treasuryEndpoint, { cache: "no-store" });
+    const response = await fetchWithTimeout(treasuryEndpoint);
     if (!response.ok) throw new Error("Direct Treasury request failed");
 
     const payload = await response.json();
@@ -239,13 +254,13 @@
   }
 
   async function fetchDebtData() {
-    try {
-      const response = await fetch(endpoint, { cache: "no-store" });
+    const fetchAppEndpoint = async () => {
+      const response = await fetchWithTimeout(endpoint);
       if (!response.ok) throw new Error("Debt endpoint failed");
       return validateDebtData(await response.json());
-    } catch {
-      return fetchDirectTreasuryData();
-    }
+    };
+
+    return Promise.any([fetchAppEndpoint(), fetchDirectTreasuryData()]);
   }
 
   async function load(node, index, showLoading = true) {
