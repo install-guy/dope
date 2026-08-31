@@ -1758,3 +1758,19 @@ h2 {
   margin-top: 0.35rem;
   max-width: 48rem;
 }
+
+@media (min-width: 64rem) {
+  :root {
+    --font-size-100: 0.9375rem;
+    --font-size-200: 1.0625rem;
+  }
+
+  .debt-panel__label,
+  .debt-metric dt {
+    font-size: 0.8125rem;
+  }
+
+  .debt-metric small {
+    font-size: 0.78125rem;
+  }
+}
